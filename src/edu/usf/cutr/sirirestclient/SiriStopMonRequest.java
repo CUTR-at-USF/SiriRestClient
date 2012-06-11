@@ -126,7 +126,6 @@ public class SiriStopMonRequest extends Fragment {
   
   @Override
   public void onDestroy() {
-    // TODO Auto-generated method stub
     super.onDestroy();
     destroyed = true;
   }
@@ -164,10 +163,8 @@ public class SiriStopMonRequest extends Fragment {
       strKey.trim();  //Remove any whitespace
                   
     } catch (NotFoundException e) {
-      // TODO Auto-generated catch block
       Log.w(SiriRestClientActivity.TAG, "Warning - didn't find the developer key file:" + e);        
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       Log.w(SiriRestClientActivity.TAG, "Error reading the developer key file:" + e);
     }
     
@@ -178,7 +175,6 @@ public class SiriStopMonRequest extends Fragment {
   // Private classes
   // ***************************************
   private class DownloadVehicleInfoTask extends AsyncTask<Void, Void, List<ServiceDelivery>> {
-    //TODO - need to add JAXB libraries to Maven dependencies??
       @Override
       protected void onPreExecute() {
           // before the network request begins, show a progress indicator
