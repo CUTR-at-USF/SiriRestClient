@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+    <string name="app_name">SiriRestClient</string>
+    
+    <string name="new_fragment">New fragment</string>
+    <!-- Generic UI element strings -->
+    <string name="submit_button">Submit</string>
+    
+    <!-- 
+    User Interface Strings for SIRI elements 
+    -->
+    <!-- Vehicle Monitoring fields -->
+    <string name="developer_key_veh">Developer Key</string>
+    <string name="operator_ref_veh">OperatorRef</string>
+    <string name="vehicle_ref">VehicleRef</string>
+    <string name="line_ref_veh">LineRef</string>
+    <string name="direction_ref_veh">DirectionRef</string>
+    <string name="vehicle_mon_detail_level">VehicleMonDetailLevel</string>   
+    <string name="vehicle_mon_detail_level_default_value">normal</string>
+    <string name="max_num_of_calls_onwards_veh">MaxNumOfCallsOnwards</string>
+    <!-- Stop Monitoring fields -->
+    <string name="developer_key_stop">Developer Key</string>
+    <string name="operator_ref_stop">OperatorRef</string>
+    <string name="monitoring_ref">MonitoringRef</string>
+    <string name="line_ref_stop">LineRef</string>
+    <string name="direction_ref_stop">DirectionRef</string>
+    <string name="stop_mon_detail_level">StopMonDetailLevel</string>   
+    <string name="stop_mon_detail_level_default_value">normal</string>
+    <string name="max_num_of_calls_onwards_stop">MaxNumOfCallsOnwards</string>
+    
+    <!-- 
+    MTA-specific input 
+    -->
+    <string name="mta_operator_ref_value">MTA NYCT</string>
+    <string name="mta_vehicle_ref_value">7560</string>
+    <string name="mta_monitoring_ref_value">308214</string>
+
+</resources>
