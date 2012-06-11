@@ -58,7 +58,7 @@ public class SiriRestClientActivity extends Activity {
         bar.addTab(bar.newTab()
             .setText("Stop_Mon_Request")
             .setTabListener(new TabListener<SiriStopMonRequest>(
-                    this, "vehmon", SiriStopMonRequest.class)));
+                    this, "stopmon", SiriStopMonRequest.class)));
 //        bar.addTab(bar.newTab()
 //            .setText("Stop_Mon_Request")
 //            .setTabListener(new TabListener<FragmentStack.CountingFragment>(
@@ -127,7 +127,7 @@ public class SiriRestClientActivity extends Activity {
         }
 
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
         }
     }
 }
