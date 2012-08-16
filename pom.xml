@@ -41,6 +41,12 @@
 			<version>${com.google.android-version}</version>
 			<scope>provided</scope>
 		</dependency>
+        <!-- Suport libraries for Fragments on older Android versions -->
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>r7</version>
+        </dependency>
         <!-- Spring for Android -->
 		<dependency>
 			<groupId>org.springframework.android</groupId>

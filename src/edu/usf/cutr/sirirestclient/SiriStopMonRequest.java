@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * Android imports
  */
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.res.Resources.NotFoundException;
 import android.os.AsyncTask;
@@ -73,6 +73,9 @@ public class SiriStopMonRequest extends Fragment {
   private ProgressDialog progressDialog;
 
   private boolean destroyed = false;
+  
+  public SiriStopMonRequest() {
+  }
   
   /**
    * EditText fields to hold values typed in by user

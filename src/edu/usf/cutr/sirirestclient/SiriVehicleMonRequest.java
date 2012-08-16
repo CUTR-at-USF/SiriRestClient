@@ -52,7 +52,6 @@ import java.util.List;
 /**
  * Android imports
  */
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.res.Resources.NotFoundException;
 import android.os.AsyncTask;
@@ -63,6 +62,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.support.v4.app.Fragment;
 
 /**
  * Hacks to get JAXB classes to compile on Android
@@ -94,6 +94,10 @@ public class SiriVehicleMonRequest extends Fragment {
   EditText directionRef;
   EditText vehicleMonitoringDetailLevel;
   EditText maximumNumberOfCallsOnwards;
+  
+  public SiriVehicleMonRequest() {
+	// TODO Auto-generated constructor stub
+  }
       
   @Override
   public void onCreate(Bundle savedInstanceState) {

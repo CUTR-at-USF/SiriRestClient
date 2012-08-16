@@ -1,133 +1,171 @@
-/*
- * Copyright 2012 University of South Florida
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *        http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and 
- * limitations under the License.
- */
-
 package edu.usf.cutr.sirirestclient;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ActionBar.Tab;
+import android.content.Context;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.ViewPager;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * This is a reference implementation for using the RESTful SIRI API from an android app.
- * 
- * This activity is the entry point for the app, which contains multiple fragments shown as tabs
- * using the Android action bar.
- * 
- * @author Sean Barbeau
- *
- */
-public class SiriRestClientActivity extends Activity {
-  
-    public static String TAG = "SiriRestClientActivity";
-        
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+public class SiriRestClientActivity extends FragmentActivity implements
+		ActionBar.TabListener {
 
-        final ActionBar bar = getActionBar();
-        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-        
-        bar.setTitle(getApplicationContext().getText(R.string.app_name));
-        
-//        bar.addTab(bar.newTab()
-//                .setText("Veh_Mon_Request")
-//                .setTabListener(new TabListener<FragmentStack.CountingFragment>(
-//                        this, "vehmon", FragmentStack.CountingFragment.class)));  
-        bar.addTab(bar.newTab()
-            .setText("Veh_Mon_Request")
-            .setTabListener(new TabListener<SiriVehicleMonRequest>(
-                    this, "vehmon", SiriVehicleMonRequest.class)));
-        bar.addTab(bar.newTab()
-            .setText("Stop_Mon_Request")
-            .setTabListener(new TabListener<SiriStopMonRequest>(
-                    this, "stopmon", SiriStopMonRequest.class)));
-//        bar.addTab(bar.newTab()
-//            .setText("Stop_Mon_Request")
-//            .setTabListener(new TabListener<FragmentStack.CountingFragment>(
-//                    this, "stopmon", FragmentStack.CountingFragment.class)));
-//        bar.addTab(bar.newTab()
-//                .setText("Apps")
-//                .setTabListener(new TabListener<LoaderCustom.AppListFragment>(
-//                        this, "apps", LoaderCustom.AppListFragment.class)));
-//        bar.addTab(bar.newTab()
-//                .setText("Throttle")
-//                .setTabListener(new TabListener<LoaderThrottle.ThrottledLoaderListFragment>(
-//                        this, "throttle", LoaderThrottle.ThrottledLoaderListFragment.class)));
-        
-        if (savedInstanceState != null) {
-            bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
-        }
-    }
+	public static String TAG = "SiriRestClientActivity";
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("tab", getActionBar().getSelectedNavigationIndex());        
-    }
+	/**
+	 * The {@link android.support.v4.view.PagerAdapter} that will provide
+	 * fragments for each of the sections. We use a
+	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
+	 * will keep every loaded fragment in memory. If this becomes too memory
+	 * intensive, it may be best to switch to a
+	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+	 */
+	SectionsPagerAdapter mSectionsPagerAdapter;
 
-    public static class TabListener<T extends Fragment> implements ActionBar.TabListener {
-        private final Activity mActivity;
-        private final String mTag;
-        private final Class<T> mClass;
-        private final Bundle mArgs;
-        private Fragment mFragment;
+	/**
+	 * The {@link ViewPager} that will host the section contents.
+	 */
+	ViewPager mViewPager;
 
-        public TabListener(Activity activity, String tag, Class<T> clz) {
-            this(activity, tag, clz, null);
-        }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		// Create the adapter that will return a fragment for each of the three
+		// primary sections
+		// of the app.
+		mSectionsPagerAdapter = new SectionsPagerAdapter(
+				getSupportFragmentManager());
 
-        public TabListener(Activity activity, String tag, Class<T> clz, Bundle args) {
-            mActivity = activity;
-            mTag = tag;
-            mClass = clz;
-            mArgs = args;
+		// Set up the action bar.
+		final ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setTitle(getApplicationContext().getText(R.string.app_name));
 
-            // Check to see if we already have a fragment for this tab, probably
-            // from a previously saved state.  If so, deactivate it, because our
-            // initial state is that a tab isn't shown.
-            mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
-            if (mFragment != null && !mFragment.isDetached()) {
-                FragmentTransaction ft = mActivity.getFragmentManager().beginTransaction();
-                ft.detach(mFragment);
-                ft.commit();
-            }
-        }
+		// Set up the ViewPager with the sections adapter.
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            if (mFragment == null) {
-                mFragment = Fragment.instantiate(mActivity, mClass.getName(), mArgs);
-                ft.add(android.R.id.content, mFragment, mTag);
-            } else {
-                ft.attach(mFragment);
-            }
-        }
+		// When swiping between different sections, select the corresponding
+		// tab.
+		// We can also use ActionBar.Tab#select() to do this if we have a
+		// reference to the Tab.
+		mViewPager
+				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+					@Override
+					public void onPageSelected(int position) {
+						actionBar.setSelectedNavigationItem(position);
+					}
+				});
 
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-            if (mFragment != null) {
-                ft.detach(mFragment);
-            }
-        }
+		// For each of the sections in the app, add a tab to the action bar.
+		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+			// Create a tab with text corresponding to the page title defined by
+			// the adapter. Also specify this Activity object, which implements
+			// the TabListener interface, as the listener for when this tab is
+			// selected.
+			actionBar.addTab(actionBar.newTab()
+					.setText(mSectionsPagerAdapter.getPageTitle(i))
+					.setTabListener(this));
+		}
+	}
 
-        public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            //Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
-        }
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
+	}
+
+	@Override
+	public void onTabUnselected(ActionBar.Tab tab,
+			FragmentTransaction fragmentTransaction) {
+	}
+
+	@Override
+	public void onTabSelected(ActionBar.Tab tab,
+			FragmentTransaction fragmentTransaction) {
+		// When the given tab is selected, switch to the corresponding page in
+		// the ViewPager.
+		mViewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabReselected(ActionBar.Tab tab,
+			FragmentTransaction fragmentTransaction) {
+	}
+
+	/**
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * one of the primary sections of the app.
+	 */
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+		public static final int NUMBER_OF_TABS = 4; // Used to set up TabListener
+		
+		// Constants for the different fragments that will be displayed in tabs		
+		public static final int VEH_REQUEST_FRAGMENT = 0;
+		public static final int VEH_RESPONSE_FRAGMENT = 1;
+		public static final int STOP_REQUEST_FRAGMENT = 2;
+		public static final int STOP_RESPONSE_FRAGMENT = 3;
+
+		public SectionsPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int i) {
+
+			switch (i) {
+			case VEH_REQUEST_FRAGMENT:
+				// Vehicle Monitoring Request
+				return new SiriVehicleMonRequest();
+			case VEH_RESPONSE_FRAGMENT:
+				return new SiriVehicleMonRequest();
+			case STOP_REQUEST_FRAGMENT:
+				// Stop Monitoring Request
+				return new SiriStopMonRequest();
+			case STOP_RESPONSE_FRAGMENT:
+				// Stop Monitoring Response
+				return new SiriStopMonRequest();
+			}
+
+			return null; // This should never happen
+		}
+
+		@Override
+		public int getCount() {
+			return NUMBER_OF_TABS;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case 0:
+				// Vehicle Monitoring Request
+				return getString(R.string.vehicle_req_tab_title).toUpperCase();
+			case 1:
+				// Vehicle Monitoring Response
+				return getString(R.string.vehicle_res_tab_title).toUpperCase();
+			case 2:
+				// Stop Monitoring Request
+				return getString(R.string.stop_req_tab_title).toUpperCase();
+			case 3:
+				// Stop Monitoring Response
+				return getString(R.string.stop_res_tab_title).toUpperCase();
+			}
+			return null;
+		}
+	}
+
 }
