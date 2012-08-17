@@ -9,19 +9,21 @@
     
     <properties>
 		<android-platform>15</android-platform>
-		<android-maven-plugin-version>3.1.1</android-maven-plugin-version>
-		<maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
+		<android-maven-plugin-version>3.3.0</android-maven-plugin-version>
+        <android-support-v4-version>r7</android-support-v4-version>
+        <actionbarsherlock-version>4.1.0</actionbarsherlock-version>
+		<maven-compiler-plugin-version>2.5.1</maven-compiler-plugin-version>
 		<java-version>1.6</java-version>
-		<maven-eclipse-plugin-version>2.8</maven-eclipse-plugin-version>
+		<maven-eclipse-plugin-version>2.9</maven-eclipse-plugin-version>
 		<com.google.android-version>4.0.1.2</com.google.android-version>
 		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3, 4.0.1.2 -->
-		<org.springframework.android-version>1.0.0.BUILD-SNAPSHOT</org.springframework.android-version>
+		<org.springframework.android-version>1.0.0.RELEASE</org.springframework.android-version>
 		<org.springframework.social-version>1.0.2.RELEASE</org.springframework.social-version>
 		<org.springframework.social-facebook-version>1.0.1.RELEASE</org.springframework.social-facebook-version>
-		<org.springframework.security-version>3.1.0.RELEASE</org.springframework.security-version>
-		<org.codehaus.jackson-version>1.9.7</org.codehaus.jackson-version>
-		<com.google.code.gson-version>2.2</com.google.code.gson-version>
-		<org.simpleframework-version>2.6.2</org.simpleframework-version>
+		<org.springframework.security-version>3.1.2.RELEASE</org.springframework.security-version>
+		<org.codehaus.jackson-version>1.9.9</org.codehaus.jackson-version>
+		<com.google.code.gson-version>2.2.2</com.google.code.gson-version>
+		<org.simpleframework-version>2.6.6</org.simpleframework-version>
 	</properties>
 
 	<dependencies>
@@ -45,8 +47,9 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
-            <version>r7</version>
+            <version>${android-support-v4-version}</version>
         </dependency>
+        
         <!-- Spring for Android -->
 		<dependency>
 			<groupId>org.springframework.android</groupId>
