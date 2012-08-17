@@ -18,6 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * This is a reference implementation for using the RESTful SIRI API from an
+ * Android app. This activity is the entry point for the app, which contains
+ * multiple fragments shown as tabs using the Android action bar.
+ * 
+ * @author Sean J. Barbeau
+ * 
+ */
 public class SiriRestClientActivity extends FragmentActivity implements
 		ActionBar.TabListener {
 
@@ -111,9 +119,10 @@ public class SiriRestClientActivity extends FragmentActivity implements
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-		public static final int NUMBER_OF_TABS = 4; // Used to set up TabListener
-		
-		// Constants for the different fragments that will be displayed in tabs		
+		public static final int NUMBER_OF_TABS = 4; // Used to set up
+													// TabListener
+
+		// Constants for the different fragments that will be displayed in tabs
 		public static final int VEH_REQUEST_FRAGMENT = 0;
 		public static final int VEH_RESPONSE_FRAGMENT = 1;
 		public static final int STOP_REQUEST_FRAGMENT = 2;
@@ -129,15 +138,15 @@ public class SiriRestClientActivity extends FragmentActivity implements
 			switch (i) {
 			case VEH_REQUEST_FRAGMENT:
 				// Vehicle Monitoring Request
-				return new SiriVehicleMonRequest();
+				return new SiriVehicleMonRequestFragment();
 			case VEH_RESPONSE_FRAGMENT:
-				return new SiriVehicleMonRequest();
+				return new SiriVehicleMonRequestFragment();
 			case STOP_REQUEST_FRAGMENT:
 				// Stop Monitoring Request
-				return new SiriStopMonRequest();
+				return new SiriStopMonRequestFragment();
 			case STOP_RESPONSE_FRAGMENT:
 				// Stop Monitoring Response
-				return new SiriStopMonRequest();
+				return new SiriStopMonRequestFragment();
 			}
 
 			return null; // This should never happen

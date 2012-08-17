@@ -19,8 +19,6 @@ package edu.usf.cutr.sirirestclient;
 /**
  * Spring imports
  */
-//import org.springframework.android.showcase.rest.State;
-//import org.springframework.android.showcase.rest.StatesListAdapter;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -52,6 +50,7 @@ import java.util.List;
 /**
  * Android imports
  */
+import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.res.Resources.NotFoundException;
 import android.os.AsyncTask;
@@ -62,15 +61,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.support.v4.app.Fragment;
-
-/**
- * Hacks to get JAXB classes to compile on Android
- * see: http://www.docx4java.org/blog/2012/05/jaxb-can-be-made-to-run-on-android/
- */
-//import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
-//import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
-//import ae.javax.xml.bind.annotation.XmlAccessType;
 
 /**
  * The UI for the input fields for the SIRI Vehicle Monitoring Request
@@ -78,26 +68,25 @@ import android.support.v4.app.Fragment;
  * @author Sean Barbeau
  *
  */
-public class SiriVehicleMonRequest extends Fragment {
+public class SiriStopMonRequestFragment extends Fragment {
  
   private ProgressDialog progressDialog;
 
   private boolean destroyed = false;
   
+  public SiriStopMonRequestFragment() {
+  }
+  
   /**
    * EditText fields to hold values typed in by user
    */
   EditText key;
-  EditText operatorRef;
-  EditText vehicleRef;
+  EditText operatorRef;  
+  EditText monitoringRef;
   EditText lineRef;
   EditText directionRef;
-  EditText vehicleMonitoringDetailLevel;
+  EditText stopMonitoringDetailLevel;
   EditText maximumNumberOfCallsOnwards;
-  
-  public SiriVehicleMonRequest() {
-	// TODO Auto-generated constructor stub
-  }
       
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -109,18 +98,18 @@ public class SiriVehicleMonRequest extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
           Bundle savedInstanceState) {
-      View v = inflater.inflate(R.layout.siri_vehicle_mon_request, container, false);
+      View v = inflater.inflate(R.layout.siri_stop_mon_request, container, false);
             
       //Try to get the developer key from a resource file, if it exists
-      String strKey = getKeyFromResource(); 
+      String strKey = SiriUtils.getKeyFromResource(this); 
             
       key = (EditText) v.findViewById(R.id.key); 
       key.setText(strKey);
       operatorRef = (EditText) v.findViewById(R.id.operatorRef);
-      vehicleRef = (EditText) v.findViewById(R.id.vehicleRef);
+      monitoringRef = (EditText) v.findViewById(R.id.monitoringRef);
       lineRef = (EditText) v.findViewById(R.id.lineRef);
       directionRef = (EditText) v.findViewById(R.id.directionRef);
-      vehicleMonitoringDetailLevel = (EditText) v.findViewById(R.id.vehicleMonDetailLevel);
+      stopMonitoringDetailLevel = (EditText) v.findViewById(R.id.stopMonDetailLevel);
       maximumNumberOfCallsOnwards= (EditText) v.findViewById(R.id.maxNumOfCallsOnwards);
       
       final Button button = (Button) v.findViewById(R.id.submit);
@@ -155,36 +144,7 @@ public class SiriVehicleMonRequest extends Fragment {
       //StatesListAdapter adapter = new StatesListAdapter(this, states);
       //setListAdapter(adapter);
   }
-  
-  /**
-   * Try to grab the developer key from an unversioned resource file, if it exists
-   * @return the developer key from an unversioned resource file, or empty string if it doesn't exist
-   */
-  private String getKeyFromResource(){
-    String strKey = new String("");
-    
-    try {
-      InputStream in = getResources().openRawResource(R.raw.devkey);
-      BufferedReader r = new BufferedReader(new InputStreamReader(in));
-      StringBuilder total = new StringBuilder();
-      
-      while ((strKey = r.readLine()) != null) {
-          total.append(strKey);
-      }
-      
-      strKey = total.toString();
-      
-      strKey.trim();  //Remove any whitespace
-                  
-    } catch (NotFoundException e) {
-      Log.w(SiriRestClientActivity.TAG, "Warning - didn't find the developer key file:" + e);        
-    } catch (IOException e) {
-      Log.w(SiriRestClientActivity.TAG, "Error reading the developer key file:" + e);
-    }
-    
-    return strKey;
-  }
-  
+ 
   //***************************************
   // Private classes
   // ***************************************
