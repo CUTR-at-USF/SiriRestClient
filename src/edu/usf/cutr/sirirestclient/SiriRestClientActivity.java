@@ -127,6 +127,12 @@ public class SiriRestClientActivity extends FragmentActivity implements
 		public static final int VEH_RESPONSE_FRAGMENT = 1;
 		public static final int STOP_REQUEST_FRAGMENT = 2;
 		public static final int STOP_RESPONSE_FRAGMENT = 3;
+		
+		//Maintain handle to Fragments to avoid recreating them if one already exists
+		Fragment vehicleRequest;
+		Fragment vehicleResponse;
+		Fragment stopRequest;
+		Fragment stopResponse;		
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -138,15 +144,27 @@ public class SiriRestClientActivity extends FragmentActivity implements
 			switch (i) {
 			case VEH_REQUEST_FRAGMENT:
 				// Vehicle Monitoring Request
-				return new SiriVehicleMonRequestFragment();
+				if(vehicleRequest == null){
+					vehicleRequest = new SiriVehicleMonRequestFragment();
+				}
+				return vehicleRequest;
 			case VEH_RESPONSE_FRAGMENT:
-				return new SiriVehicleMonRequestFragment();
+				if(vehicleResponse == null){
+					vehicleResponse = new SiriVehicleMonRequestFragment();
+				}
+				return vehicleResponse;
 			case STOP_REQUEST_FRAGMENT:
 				// Stop Monitoring Request
-				return new SiriStopMonRequestFragment();
+				if(stopRequest == null){
+					stopRequest = new SiriStopMonRequestFragment();
+				}
+				return stopRequest;
 			case STOP_RESPONSE_FRAGMENT:
 				// Stop Monitoring Response
-				return new SiriStopMonRequestFragment();
+				if(stopResponse == null){
+					stopResponse = new SiriStopMonRequestFragment();
+				}
+				return stopResponse;
 			}
 
 			return null; // This should never happen
@@ -173,7 +191,7 @@ public class SiriRestClientActivity extends FragmentActivity implements
 				// Stop Monitoring Response
 				return getString(R.string.stop_res_tab_title).toUpperCase();
 			}
-			return null;
+			return null; // This should never happen
 		}
 	}
 
