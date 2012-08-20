@@ -1,22 +1,21 @@
 package edu.usf.cutr.sirirestclient;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
-import android.content.Context;
+/**
+ * ActionBarSherlock imports for ActionBar support on pre-3.0 devices
+ */
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import android.os.Bundle;
+
+/**
+ * Android support library imports for Fragment support on pre-3.0 devices
+ */
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 /**
  * This is a reference implementation for using the RESTful SIRI API from an
@@ -26,7 +25,7 @@ import android.widget.TextView;
  * @author Sean J. Barbeau
  * 
  */
-public class SiriRestClientActivity extends FragmentActivity implements
+public class SiriRestClientActivity extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
 
 	public static String TAG = "SiriRestClientActivity";
@@ -48,6 +47,7 @@ public class SiriRestClientActivity extends FragmentActivity implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// Create the adapter that will return a fragment for each of the three
@@ -57,8 +57,8 @@ public class SiriRestClientActivity extends FragmentActivity implements
 				getSupportFragmentManager());
 
 		// Set up the action bar.
-		final ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		final com.actionbarsherlock.app.ActionBar actionBar = getSupportActionBar();
+		actionBar.setNavigationMode(com.actionbarsherlock.app.ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setTitle(getApplicationContext().getText(R.string.app_name));
 
 		// Set up the ViewPager with the sections adapter.
@@ -91,26 +91,31 @@ public class SiriRestClientActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
 	@Override
-	public void onTabUnselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
-	}
-
-	@Override
-	public void onTabSelected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
+	public void onTabSelected(Tab tab,
+			android.support.v4.app.FragmentTransaction ft) {
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition());
+
 	}
 
 	@Override
-	public void onTabReselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
+	public void onTabUnselected(Tab tab,
+			android.support.v4.app.FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onTabReselected(Tab tab,
+			android.support.v4.app.FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
@@ -127,12 +132,13 @@ public class SiriRestClientActivity extends FragmentActivity implements
 		public static final int VEH_RESPONSE_FRAGMENT = 1;
 		public static final int STOP_REQUEST_FRAGMENT = 2;
 		public static final int STOP_RESPONSE_FRAGMENT = 3;
-		
-		//Maintain handle to Fragments to avoid recreating them if one already exists
+
+		// Maintain handle to Fragments to avoid recreating them if one already
+		// exists
 		Fragment vehicleRequest;
 		Fragment vehicleResponse;
 		Fragment stopRequest;
-		Fragment stopResponse;		
+		Fragment stopResponse;
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -144,24 +150,24 @@ public class SiriRestClientActivity extends FragmentActivity implements
 			switch (i) {
 			case VEH_REQUEST_FRAGMENT:
 				// Vehicle Monitoring Request
-				if(vehicleRequest == null){
+				if (vehicleRequest == null) {
 					vehicleRequest = new SiriVehicleMonRequestFragment();
 				}
 				return vehicleRequest;
 			case VEH_RESPONSE_FRAGMENT:
-				if(vehicleResponse == null){
+				if (vehicleResponse == null) {
 					vehicleResponse = new SiriVehicleMonRequestFragment();
 				}
 				return vehicleResponse;
 			case STOP_REQUEST_FRAGMENT:
 				// Stop Monitoring Request
-				if(stopRequest == null){
+				if (stopRequest == null) {
 					stopRequest = new SiriStopMonRequestFragment();
 				}
 				return stopRequest;
 			case STOP_RESPONSE_FRAGMENT:
 				// Stop Monitoring Response
-				if(stopResponse == null){
+				if (stopResponse == null) {
 					stopResponse = new SiriStopMonRequestFragment();
 				}
 				return stopResponse;
@@ -194,5 +200,4 @@ public class SiriRestClientActivity extends FragmentActivity implements
 			return null; // This should never happen
 		}
 	}
-
 }

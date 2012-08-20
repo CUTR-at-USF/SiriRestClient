@@ -44,11 +44,26 @@
 			<scope>provided</scope>
 		</dependency>
         <!-- Suport libraries for Fragments on older Android versions -->
+        <!--
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
             <version>${android-support-v4-version}</version>
         </dependency>
+        -->
+        
+        <!-- ActionBarSherlock - supports ActionBar on older Android versions
+          This currently causes an error and is therefore commented out:
+         "dependency=[com.actionbarsherlock:library:apklib:4.1.0:compile] not found in workspace"
+         see: 
+         
+        <dependency>
+            <groupId>com.actionbarsherlock</groupId>
+            <artifactId>library</artifactId>
+            <version>${actionbarsherlock-version}</version>
+            <type>apklib</type>
+        </dependency>
+        -->
         
         <!-- Spring for Android -->
 		<dependency>

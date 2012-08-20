@@ -29,6 +29,8 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 /**
  * SIRI imports
  */
@@ -68,7 +70,7 @@ import android.widget.EditText;
  * @author Sean Barbeau
  *
  */
-public class SiriStopMonRequestFragment extends Fragment {
+public class SiriStopMonRequestFragment extends SherlockFragment {
  
   private ProgressDialog progressDialog;
 
