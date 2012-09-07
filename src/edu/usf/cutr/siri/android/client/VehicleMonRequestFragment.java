@@ -181,8 +181,8 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			 */
 			
 			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-			int httpConnectionType = sharedPref.getInt(Preferences.KEY_HTTP_CONNECTION_TYPE, 0);
-			int jacksonObjectType = sharedPref.getInt(Preferences.KEY_JACKSON_OBJECT_TYPE, 0);
+			int httpConnectionType = Integer.parseInt(sharedPref.getString(Preferences.KEY_HTTP_CONNECTION_TYPE, "0"));
+			int jacksonObjectType = Integer.parseInt(sharedPref.getString(Preferences.KEY_JACKSON_OBJECT_TYPE, "0"));
 						
 			try {
 				url = new URL(urlString);
