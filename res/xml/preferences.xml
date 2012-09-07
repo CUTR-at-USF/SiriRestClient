@@ -6,7 +6,8 @@
         <ListPreference
             android:key="pref_key_jackson_object"
             android:title="@string/pref_jackson_object_title"
-            android:dialogTitle="@string/pref_jackson_object_dialog_title"
+            android:summary="@string/pref_jackson_object_summary"
+            android:dialogTitle="@string/pref_jackson_object_dialog_title"            
             android:entries="@array/pref_jackson_object_entries"
             android:entryValues="@array/pref_jackson_object_values"
             android:defaultValue="0" />
@@ -17,6 +18,7 @@
         <ListPreference
             android:key="pref_key_http_connection"
             android:title="@string/pref_http_connection_title"
+            android:summary="@string/pref_http_connection_summary"
             android:dialogTitle="@string/pref_http_connection_dialog_title"
             android:entries="@array/pref_http_connection_entries"
             android:entryValues="@array/pref_http_connection_values"
