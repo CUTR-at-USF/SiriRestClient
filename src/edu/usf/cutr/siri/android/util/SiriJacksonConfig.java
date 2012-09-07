@@ -1,7 +1,10 @@
 package edu.usf.cutr.siri.android.util;
 
+import uk.org.siri.siri.Siri;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 import edu.usf.cutr.siri.jackson.PascalCaseStrategy;
 
@@ -20,14 +23,46 @@ import edu.usf.cutr.siri.jackson.PascalCaseStrategy;
 public class SiriJacksonConfig {
 
 	private static ObjectMapper mapper = null;
+	private static ObjectReader reader = null;
 
 	/**
 	 * Constructs a thread-safe instance of a Jackson ObjectMapper configured to parse
-	 * JSON responses from a Mobile Siri API 
+	 * JSON responses from a Mobile Siri API.
+	 * 
+	 * According to Jackson Best Practices (http://wiki.fasterxml.com/JacksonBestPracticesPerformance),
+	 * for efficiency reasons you should use the ObjectReader instead of the ObjectMapper.
+	 * 
+	 * @deprecated
 	 * @return thread-safe ObjectMapper configured for SIRI JSON responses
 	 */
-	public synchronized static ObjectMapper getObjectMapperInstance() {
+	public synchronized static ObjectMapper getObjectMapperInstance() {		
+		return initObjectMapper();		
+	}
+	
+	/**
+	 * Constructs a thread-safe instance of a Jackson ObjectReader configured to parse
+	 * JSON responses from a Mobile Siri API 
+	 * 
+	 * According to Jackson Best Practices (http://wiki.fasterxml.com/JacksonBestPracticesPerformance),
+	 * this should be more efficient than the ObjectMapper.
+	 * 
+	 * @return thread-safe ObjectMapper configured for SIRI JSON responses
+	 */
+	public synchronized static ObjectReader getObjectReaderInstance() {
+		
+		if(reader == null){
+			reader = initObjectMapper().reader(Siri.class);
+		}
+		
+		return reader;
+	}
+	
+	
 
+	/**
+	 * Internal method used to init main ObjectMapper
+	 */
+	private static ObjectMapper initObjectMapper(){
 		if (mapper == null) {
 			// Jackson configuration
 			mapper = new ObjectMapper();
@@ -45,9 +80,8 @@ public class SiriJacksonConfig {
 
 			// Tell Jackson to expect the JSON in PascalCase, instead of
 			// camelCase
-			mapper.setPropertyNamingStrategy(new PascalCaseStrategy());
+			mapper.setPropertyNamingStrategy(new PascalCaseStrategy());			
 		}
-
 		return mapper;
 	}
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_category_json_parsing_title"
+        android:key="pref_key_json_settings">
+        <ListPreference
+            android:key="pref_key_jackson_object"
+            android:title="@string/pref_jackson_object_title"
+            android:dialogTitle="@string/pref_jackson_object_dialog_title"
+            android:entries="@array/pref_jackson_object_entries"
+            android:entryValues="@array/pref_jackson_object_values"
+            android:defaultValue="0" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_http_title"
+        android:key="pref_key_http_settings">
+        <ListPreference
+            android:key="pref_key_http_connection"
+            android:title="@string/pref_http_connection_title"
+            android:dialogTitle="@string/pref_http_connection_dialog_title"
+            android:entries="@array/pref_http_connection_entries"
+            android:entryValues="@array/pref_http_connection_values"
+            android:defaultValue="0" />
+    </PreferenceCategory>
+</PreferenceScreen>

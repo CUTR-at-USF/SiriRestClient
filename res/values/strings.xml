@@ -37,9 +37,28 @@
     <!-- Request -->
     <string name="stop_res_tab_title">Stop_Response</string>
 
-<!--     MTA-specific input  -->
+    <!-- MTA-specific input -->
     <string name="mta_operator_ref_value">MTA NYCT</string>
     <string name="mta_vehicle_ref_value">7560</string>
     <string name="mta_monitoring_ref_value">308214</string>
+    
+    <!-- 
+    Settings 
+    -->
+    <string name="pref_Title">Settings</string>
+    
+    <!-- Jackson parsing -->
+    <string name="pref_category_json_parsing_title">JSON Parsing</string>
+    <string name="pref_jackson_object_title">Jackson Parser Type</string>
+    <string name="pref_jackson_object_summary">Select the ObjectMapper or ObjectReader to perform JSON parsing</string>
+    <string name="pref_jackson_object_dialog_title">Jackson Parser Type</string>
+    <string name="pref_jackson_object_default_value">0</string>
+       
+    <!-- HTTP Connection -->
+    <string name="pref_category_http_title">HTTP Connection</string>
+    <string name="pref_http_connection_title">Connection Type</string>
+    <string name="pref_http_connection_summary">Select the internal Jackson or native Android HTTP connection</string>
+    <string name="pref_http_connection_dialog_title">HTTP Connection Type</string>
+    <string name="pref_http_connection_default_value">0</string>
     
 </resources>

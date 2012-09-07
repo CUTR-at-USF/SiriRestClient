@@ -23,7 +23,9 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
@@ -103,13 +105,28 @@ public class SiriRestClientActivity extends SherlockFragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
-		}
+		}		
 	}
 
+	/**
+	 * Create menu item for settings
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle menu item selection
+		switch(item.getItemId()){
+			case R.id.menu_settings:
+				//Show settings menu
+				startActivity(new Intent(this, Preferences.class));
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override

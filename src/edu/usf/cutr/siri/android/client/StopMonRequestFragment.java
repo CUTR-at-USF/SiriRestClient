@@ -20,42 +20,20 @@ package edu.usf.cutr.siri.android.client;
  * Spring imports
  */
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-import edu.usf.cutr.siri.android.util.SiriUtils;
-
-/**
- * SIRI imports
- */
-import uk.org.siri.siri.ServiceDelivery;
 import uk.org.siri.siri.Siri;
-
-/**
- * Java imports
- */
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * Android imports
- */
-import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.res.Resources.NotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,6 +42,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.actionbarsherlock.app.SherlockFragment;
+
+import edu.usf.cutr.siri.android.util.SiriUtils;
+/**
+ * SIRI imports
+ */
+/**
+ * Java imports
+ */
+/**
+ * Android imports
+ */
 
 /**
  * The UI for the input fields for the SIRI Vehicle Monitoring Request
