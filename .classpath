@@ -7,6 +7,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/onebusaway-siri-api-v13-pojos"/>
 	<classpathentry kind="src" output="bin/classes" path="src">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

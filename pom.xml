@@ -28,13 +28,20 @@
 
 	<dependencies>
         <!-- OneBusAway SIRI -->
-        <!-- 
-        <dependency>
+        <!-- <dependency>
             <groupId>org.onebusaway</groupId>
-            <artifactId>onebusaway-siri-core</artifactId>
+            <artifactId>onebusaway-siri-api-v13</artifactId>
             <version>1.0.1</version>
+            </dependency>
+            -->            
+        <!-- EclipseLink MOXy -->
+        <!-- <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.moxy</artifactId>
+            <version>2.4.0</version>
+            <scope>compile</scope>
         </dependency>
-         -->
+        -->       
               
         <!-- Android -->
 		<dependency>
@@ -43,27 +50,6 @@
 			<version>${com.google.android-version}</version>
 			<scope>provided</scope>
 		</dependency>
-        <!-- Suport libraries for Fragments on older Android versions -->
-        <!--
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>support-v4</artifactId>
-            <version>${android-support-v4-version}</version>
-        </dependency>
-        -->
-        
-        <!-- ActionBarSherlock - supports ActionBar on older Android versions
-          This currently causes an error and is therefore commented out:
-         "dependency=[com.actionbarsherlock:library:apklib:4.1.0:compile] not found in workspace"
-         see: 
-         
-        <dependency>
-            <groupId>com.actionbarsherlock</groupId>
-            <artifactId>library</artifactId>
-            <version>${actionbarsherlock-version}</version>
-            <type>apklib</type>
-        </dependency>
-        -->
         
         <!-- Spring for Android -->
 		<dependency>
@@ -129,13 +115,32 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<!-- Using Jackson for JSON marshaling -->
+		<!-- Using Jackson for JSON marshaling -->
+        <dependency>			
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${org.codehaus.jackson-version}</version>
 		</dependency>
-		<dependency>
+        <!-- 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+     
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+	-->
+    	<dependency>
 			<!-- Using Gson for JSON marshaling -->
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -233,10 +238,11 @@
 
 	<repositories>
         <!-- OneBusAway SIRI -->
-        <repository>
+        <!-- <repository>
             <id>public.onebusaway.org</id>
             <url>http://nexus.onebusaway.org/content/groups/public/</url>
         </repository>
+         -->
 		<!-- For testing against latest Spring snapshots -->
 		<repository>
 			<id>org.springframework.maven.snapshot</id>
@@ -258,6 +264,12 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+        <!-- EclipseLink MOXy -->
+        <!-- <repository>
+            <id>EclipseLink Repo</id>
+        <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+        </repository>
+         --> 
 	</repositories>  
     
 </project>

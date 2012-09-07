@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package edu.usf.cutr.sirirestclient;
+package edu.usf.cutr.siri.android.client;
 
 /**
  * Spring imports
  */
-//import org.springframework.android.showcase.rest.State;
-//import org.springframework.android.showcase.rest.StatesListAdapter;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,12 +31,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import edu.usf.cutr.siri.android.util.SiriUtils;
+
 /**
  * SIRI imports
  */
 import uk.org.siri.siri.ServiceDelivery;
 import uk.org.siri.siri.Siri;
-import uk.org.siri.siri.VehicleMonitoringDelivery;
 
 /**
  * Java imports
@@ -54,6 +53,7 @@ import java.util.List;
 /**
  * Android imports
  */
+import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.res.Resources.NotFoundException;
 import android.os.AsyncTask;
@@ -64,15 +64,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.support.v4.app.Fragment;
-
-/**
- * Hacks to get JAXB classes to compile on Android
- * see: http://www.docx4java.org/blog/2012/05/jaxb-can-be-made-to-run-on-android/
- */
-//import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
-//import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
-//import ae.javax.xml.bind.annotation.XmlAccessType;
 
 /**
  * The UI for the input fields for the SIRI Vehicle Monitoring Request
@@ -80,25 +71,25 @@ import android.support.v4.app.Fragment;
  * @author Sean Barbeau
  *
  */
-public class SiriVehicleMonRequestFragment extends SherlockFragment {
+public class SiriStopMonRequestFragment extends SherlockFragment {
  
   private ProgressDialog progressDialog;
 
   private boolean destroyed = false;
   
+  public SiriStopMonRequestFragment() {
+  }
+  
   /**
    * EditText fields to hold values typed in by user
    */
   EditText key;
-  EditText operatorRef;
-  EditText vehicleRef;
+  EditText operatorRef;  
+  EditText monitoringRef;
   EditText lineRef;
   EditText directionRef;
-  EditText vehicleMonitoringDetailLevel;
+  EditText stopMonitoringDetailLevel;
   EditText maximumNumberOfCallsOnwards;
-  
-  public SiriVehicleMonRequestFragment() {
-  }
       
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +101,7 @@ public class SiriVehicleMonRequestFragment extends SherlockFragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
           Bundle savedInstanceState) {
-      View v = inflater.inflate(R.layout.siri_vehicle_mon_request, container, false);
+      View v = inflater.inflate(R.layout.siri_stop_mon_request, container, false);
             
       //Try to get the developer key from a resource file, if it exists
       String strKey = SiriUtils.getKeyFromResource(this); 
@@ -118,10 +109,10 @@ public class SiriVehicleMonRequestFragment extends SherlockFragment {
       key = (EditText) v.findViewById(R.id.key); 
       key.setText(strKey);
       operatorRef = (EditText) v.findViewById(R.id.operatorRef);
-      vehicleRef = (EditText) v.findViewById(R.id.vehicleRef);
+      monitoringRef = (EditText) v.findViewById(R.id.monitoringRef);
       lineRef = (EditText) v.findViewById(R.id.lineRef);
       directionRef = (EditText) v.findViewById(R.id.directionRef);
-      vehicleMonitoringDetailLevel = (EditText) v.findViewById(R.id.vehicleMonDetailLevel);
+      stopMonitoringDetailLevel = (EditText) v.findViewById(R.id.stopMonDetailLevel);
       maximumNumberOfCallsOnwards= (EditText) v.findViewById(R.id.maxNumOfCallsOnwards);
       
       final Button button = (Button) v.findViewById(R.id.submit);
@@ -148,7 +139,7 @@ public class SiriVehicleMonRequestFragment extends SherlockFragment {
   // ***************************************
   // Private methods
   // ***************************************
-  private void refreshStates(List<ServiceDelivery> states) {
+  private void refreshStates(List<Siri> states) {
       if (states == null) {
           return;
       }
@@ -156,13 +147,11 @@ public class SiriVehicleMonRequestFragment extends SherlockFragment {
       //StatesListAdapter adapter = new StatesListAdapter(this, states);
       //setListAdapter(adapter);
   }
-  
-  
-  
+ 
   //***************************************
   // Private classes
   // ***************************************
-  private class DownloadVehicleInfoTask extends AsyncTask<Void, Void, List<ServiceDelivery>> {
+  private class DownloadVehicleInfoTask extends AsyncTask<Void, Void, List<Siri>> {
       @Override
       protected void onPreExecute() {
           // before the network request begins, show a progress indicator
@@ -170,10 +159,11 @@ public class SiriVehicleMonRequestFragment extends SherlockFragment {
       }
 
       @Override
-      protected List<ServiceDelivery> doInBackground(Void... params) {
+      protected List<Siri> doInBackground(Void... params) {
           try {
               // The URL for making the GET request
-              String url = "http://bustime.mta.info/api/siri" + "/vehicle-monitoring.json?OperatorRef=MTA NYCT";
+              //String url = "http://bustime.mta.info/api/siri" + "/vehicle-monitoring.json?OperatorRef=MTA NYCT";
+              String url = "http://bustime.mta.info/api/siri/vehicle-monitoring.json?OperatorRef=MTA%20NYCT&DirectionRef=0&LineRef=MTA%20NYCT_S40";
 //              final String url = "http://bustime.mta.info/api/siri" + "/vehicle-monitoring.json?" +
 //              		"key={key}&OperatorRef={operatorRef}&VehicleRef={vehicleRef}&LineRef={lineRef}&DirectionRef={directionRef}" +
 //              		"&VehicleMonitoringDetailLevel={vehicleMonitoringDetailLevel}&MaximumNumberOfCallsOnwards={maximumNumberOfCallsOnwards}";
@@ -198,14 +188,14 @@ public class SiriVehicleMonRequestFragment extends SherlockFragment {
               //restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
                          
               // Perform the HTTP GET request w/ specified parameters
-              ResponseEntity<ServiceDelivery[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, ServiceDelivery[].class);
+              ResponseEntity<Siri[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Siri[].class);
 //              ResponseEntity<Siri[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Siri[].class, 
 //                  key.getText().toString(), operatorRef.getText().toString(), vehicleRef.getText().toString(), 
 //                  lineRef.getText().toString(), directionRef.getText().toString(), 
 //                  vehicleMonitoringDetailLevel.getText().toString(), maximumNumberOfCallsOnwards.getText().toString());
                             
               //convert the array to a list
-              List<ServiceDelivery> list = Arrays.asList(responseEntity.getBody());
+              List<Siri> list = Arrays.asList(responseEntity.getBody());
               
 //              for(Siri l : list){
 //                List<VehicleMonitoringDelivery> listVMD = l.getServiceDelivery().getVehicleMonitoringDelivery();
@@ -226,7 +216,7 @@ public class SiriVehicleMonRequestFragment extends SherlockFragment {
       }
 
       @Override
-      protected void onPostExecute(List<ServiceDelivery> result) {
+      protected void onPostExecute(List<Siri> result) {
           // hide the progress indicator when the network request is complete
           dismissProgressDialog();
           
