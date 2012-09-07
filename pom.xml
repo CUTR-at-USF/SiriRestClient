@@ -116,12 +116,12 @@
 			</exclusions>
 		</dependency>
 		<!-- Using Jackson for JSON marshaling -->
-        <dependency>			
+        <!-- <dependency>			
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${org.codehaus.jackson-version}</version>
 		</dependency>
-        <!-- 
+         -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -139,7 +139,7 @@
             <artifactId>jackson-annotations</artifactId>
             <version>2.0.5</version>
         </dependency>
-	-->
+	
     	<dependency>
 			<!-- Using Gson for JSON marshaling -->
 			<groupId>com.google.code.gson</groupId>

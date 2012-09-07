@@ -168,7 +168,7 @@ public class SiriRestClientActivity extends SherlockFragmentActivity implements
 			case VEH_REQUEST_FRAGMENT:
 				// Vehicle Monitoring Request
 				if (vehicleRequest == null) {
-					vehicleRequest = new SiriVehicleMonRequestFragment();
+					vehicleRequest = new VehicleMonRequestFragment();
 				}
 				return vehicleRequest;
 			case VEH_RESPONSE_FRAGMENT:
@@ -179,7 +179,7 @@ public class SiriRestClientActivity extends SherlockFragmentActivity implements
 			case STOP_REQUEST_FRAGMENT:
 				// Stop Monitoring Request
 				if (stopRequest == null) {
-					stopRequest = new SiriStopMonRequestFragment();
+					stopRequest = new StopMonRequestFragment();
 				}
 				return stopRequest;
 			case STOP_RESPONSE_FRAGMENT:

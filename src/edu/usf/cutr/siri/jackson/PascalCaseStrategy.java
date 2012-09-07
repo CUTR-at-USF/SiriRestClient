@@ -16,7 +16,8 @@
 
 package edu.usf.cutr.siri.jackson;
 
-import org.codehaus.jackson.map.PropertyNamingStrategy.PropertyNamingStrategyBase;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.PropertyNamingStrategyBase;
+
 
 
 /**
