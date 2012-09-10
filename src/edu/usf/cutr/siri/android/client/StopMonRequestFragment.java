@@ -20,17 +20,7 @@ package edu.usf.cutr.siri.android.client;
  * Spring imports
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 import uk.org.siri.siri.Siri;
 import android.app.ProgressDialog;
@@ -164,29 +154,30 @@ public class StopMonRequestFragment extends SherlockFragment {
               url.replace(" ", "%20");  //Handle spaces
             
               // Set the Accept header for "application/json"
-              HttpHeaders requestHeaders = new HttpHeaders();
-              List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
-              acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+//              HttpHeaders requestHeaders = new HttpHeaders();
+//              List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
+//              acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
               //acceptableMediaTypes.add(MediaType.TEXT_PLAIN);
-              requestHeaders.setAccept(acceptableMediaTypes);
+              //requestHeaders.setAccept(acceptableMediaTypes);
 
               // Populate the headers in an HttpEntity object to use for the request
-              HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+              //HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
               
               // Create a new RestTemplate instance
-              RestTemplate restTemplate = new RestTemplate();
-              restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+//              RestTemplate restTemplate = new RestTemplate();
+//              restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
               //restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
                          
               // Perform the HTTP GET request w/ specified parameters
-              ResponseEntity<Siri[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Siri[].class);
+              //ResponseEntity<Siri[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Siri[].class);
 //              ResponseEntity<Siri[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Siri[].class, 
 //                  key.getText().toString(), operatorRef.getText().toString(), vehicleRef.getText().toString(), 
 //                  lineRef.getText().toString(), directionRef.getText().toString(), 
 //                  vehicleMonitoringDetailLevel.getText().toString(), maximumNumberOfCallsOnwards.getText().toString());
                             
               //convert the array to a list
-              List<Siri> list = Arrays.asList(responseEntity.getBody());
+              List<Siri> list = null;
+              //list = Arrays.asList(responseEntity.getBody());
               
 //              for(Siri l : list){
 //                List<VehicleMonitoringDelivery> listVMD = l.getServiceDelivery().getVehicleMonitoringDelivery();

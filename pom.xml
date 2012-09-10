@@ -26,23 +26,7 @@
 		<org.simpleframework-version>2.6.6</org.simpleframework-version>
 	</properties>
 
-	<dependencies>
-        <!-- OneBusAway SIRI -->
-        <!-- <dependency>
-            <groupId>org.onebusaway</groupId>
-            <artifactId>onebusaway-siri-api-v13</artifactId>
-            <version>1.0.1</version>
-            </dependency>
-            -->            
-        <!-- EclipseLink MOXy -->
-        <!-- <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <version>2.4.0</version>
-            <scope>compile</scope>
-        </dependency>
-        -->       
-              
+	<dependencies>              
         <!-- Android -->
 		<dependency>
 			<groupId>com.google.android</groupId>
@@ -51,77 +35,7 @@
 			<scope>provided</scope>
 		</dependency>
         
-        <!-- Spring for Android -->
-		<dependency>
-			<groupId>org.springframework.android</groupId>
-			<artifactId>spring-android-rest-template</artifactId>
-			<version>${org.springframework.android-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.android</groupId>
-			<artifactId>spring-android-auth</artifactId>
-			<version>${org.springframework.android-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-crypto</artifactId>
-			<version>${org.springframework.security-version}</version>
-			<exclusions>
-				<!-- Exclude in favor of Spring Android Core -->
-				<exclusion>
-					<artifactId>spring-core</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.social</groupId>
-			<artifactId>spring-social-core</artifactId>
-			<version>${org.springframework.social-version}</version>
-			<exclusions>
-				<!-- Exclude in favor of Spring Android RestTemplate -->
-				<exclusion>
-					<artifactId>spring-web</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-				<!-- Provided by Android -->
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.social</groupId>
-			<artifactId>spring-social-twitter</artifactId>
-			<version>${org.springframework.social-version}</version>
-			<exclusions>
-				<!-- Provided by Android -->
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.social</groupId>
-			<artifactId>spring-social-facebook</artifactId>
-			<version>${org.springframework.social-facebook-version}</version>
-			<exclusions>
-				<!-- Provided by Android -->
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- Using Jackson for JSON marshaling -->
-        <!-- <dependency>			
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${org.codehaus.jackson-version}</version>
-		</dependency>
-         -->
+        <!-- Using Jackson for JSON marshaling -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -138,36 +52,7 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.0.5</version>
-        </dependency>
-	
-    	<dependency>
-			<!-- Using Gson for JSON marshaling -->
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>${com.google.code.gson-version}</version>
-		</dependency>
-		<dependency>
-			<!-- Using Simple for XML marshaling -->
-			<groupId>org.simpleframework</groupId>
-			<artifactId>simple-xml</artifactId>
-			<version>${org.simpleframework-version}</version>
-			<exclusions>
-				<!-- StAX is not available on Android -->
-				<exclusion>
-					<artifactId>stax</artifactId>
-					<groupId>stax</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>stax-api</artifactId>
-					<groupId>stax</groupId>
-				</exclusion>
-				<!-- Provided by Android -->
-				<exclusion>
-					<artifactId>xpp3</artifactId>
-					<groupId>xpp3</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+        </dependency>	
 	</dependencies>
 
 	<build>
@@ -235,41 +120,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<repositories>
-        <!-- OneBusAway SIRI -->
-        <!-- <repository>
-            <id>public.onebusaway.org</id>
-            <url>http://nexus.onebusaway.org/content/groups/public/</url>
-        </repository>
-         -->
-		<!-- For testing against latest Spring snapshots -->
-		<repository>
-			<id>org.springframework.maven.snapshot</id>
-			<name>Spring Maven Snapshot Repository</name>
-			<url>http://repo.springframework.org/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<!-- For developing against latest Spring milestones -->
-		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://repo.springframework.org/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-        <!-- EclipseLink MOXy -->
-        <!-- <repository>
-            <id>EclipseLink Repo</id>
-        <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
-        </repository>
-         --> 
-	</repositories>  
-    
+	
 </project>

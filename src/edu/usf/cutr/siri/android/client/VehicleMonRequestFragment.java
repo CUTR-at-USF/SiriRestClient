@@ -22,13 +22,11 @@ package edu.usf.cutr.siri.android.client;
 //import org.springframework.android.showcase.rest.State;
 //import org.springframework.android.showcase.rest.StatesListAdapter;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import uk.org.siri.siri.Siri;
-
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
