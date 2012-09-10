@@ -118,8 +118,7 @@ public class SiriJacksonConfig {
 			xmlMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING,
 					true);
 			
-			// Tell Jackson to expect the JSON in PascalCase, instead of
-			// camelCase
+			// Tell Jackson to expect the XML in PascalCase
 			xmlMapper.setPropertyNamingStrategy(new PascalCaseStrategy());	
 		}
 		
