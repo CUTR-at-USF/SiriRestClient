@@ -2,9 +2,12 @@ package edu.usf.cutr.siri.android.util;
 
 import uk.org.siri.siri.Siri;
 
+import com.fasterxml.aalto.stax.InputFactoryImpl;
+import com.fasterxml.aalto.stax.OutputFactoryImpl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import edu.usf.cutr.siri.jackson.PascalCaseStrategy;
@@ -105,7 +108,10 @@ public class SiriJacksonConfig {
 	 */
 	private static XmlMapper initXmlMapper(){
 		if(xmlMapper == null){
-			xmlMapper = new XmlMapper();
+			//Use Aalto StAX implementation explicitly
+			XmlFactory f = new XmlFactory(new InputFactoryImpl(), new OutputFactoryImpl());
+			
+			xmlMapper = new XmlMapper(f);
 			
 			xmlMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
 			xmlMapper.configure(
