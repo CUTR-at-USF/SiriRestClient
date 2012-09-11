@@ -113,7 +113,6 @@ public class SiriJacksonConfig {
 			
 			xmlMapper = new XmlMapper(f);
 			
-			xmlMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
 			xmlMapper.configure(
 					DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 			xmlMapper.configure(
