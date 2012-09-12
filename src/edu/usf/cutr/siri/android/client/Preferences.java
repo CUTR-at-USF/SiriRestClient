@@ -9,15 +9,19 @@ public class Preferences extends SherlockPreferenceActivity {
 	/**
 	 * Preference keys
 	 * 
-	 * NOTE: These must match the values in preferences.xml
+	 * NOTE: Keys must match the values in preferences.xml
 	 */
+	public static final String KEY_REQUEST_TYPE = "pref_key_request_type";	
+	
 	public static final String KEY_HTTP_CONNECTION_TYPE = "pref_key_http_connection";	
-	public static final int HTTP_CONNECTION_TYPE_JACKSON = 0;
-	public static final int HTTP_CONNECTION_TYPE_ANDROID = 1;
 	
 	public static final String KEY_JACKSON_OBJECT_TYPE = "pref_key_jackson_object";
-	public static final int JACKSON_OBJECT_TYPE_READER = 0;
-	public static final int JACKSON_OBJECT_TYPE_MAPPER = 1;
+	
+	
+	/**
+	 * Constants for defining connection options are defined in:
+	 * edu.usf.cutr.siri.android.util.SiriRestClient
+	 */
 		
 	@SuppressWarnings("deprecation")
 	@Override

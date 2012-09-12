@@ -47,6 +47,13 @@
     -->
     <string name="pref_Title">Settings</string>
     
+    <!-- Response Type (XML or JSON) -->
+    <string name="pref_category_response_type_title">Response Type</string>
+    <string name="pref_response_type_title">Server Response Type</string>
+    <string name="pref_response_type_summary">Select JSON or XML format for the data to be returned by the server</string>
+    <string name="pref_response_type_dialog_title">Response Type</string>
+    <string name="pref_response_type_default_value">0</string>
+    
     <!-- Jackson parsing -->
     <string name="pref_category_json_parsing_title">JSON Parsing</string>
     <string name="pref_jackson_object_title">Jackson Parser Type</string>

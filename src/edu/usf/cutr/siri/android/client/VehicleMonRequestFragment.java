@@ -42,6 +42,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import edu.usf.cutr.siri.android.util.SiriJacksonConfig;
 import edu.usf.cutr.siri.android.util.SiriUtils;
@@ -148,9 +150,11 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 		@Override
 		protected Siri doInBackground(Void... params) {
 
-			// The URL for making the GET request
-			String urlString = "http://bustime.mta.info/api/siri/vehicle-monitoring.json?OperatorRef=MTA%20NYCT&DirectionRef=0&LineRef=MTA%20NYCT_S40";
-
+			// The URL for making the GET request			
+			String requestType = "xml";
+			
+			String urlString = "http://bustime.mta.info/api/siri/vehicle-monitoring." + requestType + "?OperatorRef=MTA%20NYCT&DirectionRef=0&LineRef=MTA%20NYCT_S40";
+			
 			// String url = "http://bustime.mta.info/api/siri" +
 			// "/vehicle-monitoring.json?OperatorRef=MTA NYCT";
 			// final String url = "http://bustime.mta.info/api/siri" +
@@ -163,8 +167,9 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			// http://bustime.mta.info/api/siri/vehicle-monitoring.json?OperatorRef=MTA%20NYCT&DirectionRef=0&LineRef=MTA%20NYCT_S40
 			// Sample stop monitoring request:
 			// http://bustime.mta.info/api/siri/stop-monitoring.json?OperatorRef=MTA%20NYCT&MonitoringRef=308214
+			
 			urlString.replace(" ", "%20"); // Handle spaces
-
+			
 			Siri s = null;
 
 			URL url = null;
@@ -178,55 +183,63 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			 * Get user preferences for HTTP connection type and jackson parser object type
 			 */
 			
+			//TODO - use util.SiriRestClient instead and pass in config options
+			
 			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+			int responseType = Integer.parseInt(sharedPref.getString(Preferences.KEY_HTTP_CONNECTION_TYPE, "0"));
 			int httpConnectionType = Integer.parseInt(sharedPref.getString(Preferences.KEY_HTTP_CONNECTION_TYPE, "0"));
 			int jacksonObjectType = Integer.parseInt(sharedPref.getString(Preferences.KEY_JACKSON_OBJECT_TYPE, "0"));
 						
 			try {
 				url = new URL(urlString);
 				
+				Log.i(SiriRestClientActivity.TAG, "Using URL = " + url.toString());
+				
 				disableConnectionReuseIfNecessary();  //For bugs in HttpURLConnection pre-Froyo
 				
 				startTime= System.nanoTime();
 				
-				if(httpConnectionType == Preferences.HTTP_CONNECTION_TYPE_JACKSON){				
-					//Use integrated Jackson HTTP connection by passing URL directly into Jackson object
-					
-					if(jacksonObjectType == Preferences.JACKSON_OBJECT_TYPE_READER){
-						/*
-						 * Use an ObjectReader (instead of ObjectMapper), read from URL directly
-						 * 
-						 * According to Jackson Best Practices 
-						 * (http://wiki.fasterxml.com/JacksonBestPracticesPerformance),
-						 *  this should be most efficient of the 4 combinations.
-						 */
-						Log.v(SiriRestClientActivity.TAG, "Using ObjectReader Jackson parser, Jackson HTTP Connection");
-						s = SiriJacksonConfig.getObjectReaderInstance().readValue(url);
-					}else{
-						//Use ObjectMapper, read from URL directly
-						Log.v(SiriRestClientActivity.TAG, "Using ObjectMapper Jackson parser, Jackson HTTP Connection");
-						s = SiriJacksonConfig.getObjectMapperInstance().readValue(url, Siri.class);
-					}					
-				}else{
-					//Use Android HttpURLConnection					
-					urlConnection = (HttpURLConnection) url.openConnection();	
-										
-					if(jacksonObjectType == Preferences.JACKSON_OBJECT_TYPE_READER){
-						//Use ObjectReader with Android HttpURLConnection
-						Log.v(SiriRestClientActivity.TAG, "Using ObjectReader Jackson parser, Android HttpURLConnection");
-						s = SiriJacksonConfig.getObjectReaderInstance().readValue(urlConnection.getInputStream());
-					}else{
-						//Use ObjectMapper with Android HttpURLConnection
-						Log.v(SiriRestClientActivity.TAG, "Using ObjectMapper Jackson parser, Android HttpURLConnection");
-						s = SiriJacksonConfig.getObjectMapperInstance().readValue(urlConnection.getInputStream(), Siri.class);
-					}
-				}
+//				if(httpConnectionType == Preferences.HTTP_CONNECTION_TYPE_JACKSON){				
+//					//Use integrated Jackson HTTP connection by passing URL directly into Jackson object
+//					
+//					if(jacksonObjectType == Preferences.JACKSON_OBJECT_TYPE_READER){
+//						/*
+//						 * Use an ObjectReader (instead of ObjectMapper), read from URL directly
+//						 * 
+//						 * According to Jackson Best Practices 
+//						 * (http://wiki.fasterxml.com/JacksonBestPracticesPerformance),
+//						 *  this should be most efficient of the 4 combinations.
+//						 */
+//						Log.v(SiriRestClientActivity.TAG, "Using ObjectReader Jackson parser, Jackson HTTP Connection");
+//						s = SiriJacksonConfig.getObjectReaderInstance().readValue(url);
+//					}else{
+//						//Use ObjectMapper, read from URL directly
+//						Log.v(SiriRestClientActivity.TAG, "Using ObjectMapper Jackson parser, Jackson HTTP Connection");
+//						s = SiriJacksonConfig.getObjectMapperInstance().readValue(url, Siri.class);
+//					}					
+//				}else{
+//					//Use Android HttpURLConnection					
+//					urlConnection = (HttpURLConnection) url.openConnection();	
+//										
+//					if(jacksonObjectType == Preferences.JACKSON_OBJECT_TYPE_READER){
+//						//Use ObjectReader with Android HttpURLConnection
+//						Log.v(SiriRestClientActivity.TAG, "Using ObjectReader Jackson parser, Android HttpURLConnection");
+//						s = SiriJacksonConfig.getObjectReaderInstance().readValue(urlConnection.getInputStream());
+//					}else{
+//						//Use ObjectMapper with Android HttpURLConnection
+//						Log.v(SiriRestClientActivity.TAG, "Using ObjectMapper Jackson parser, Android HttpURLConnection");
+//						s = SiriJacksonConfig.getObjectMapperInstance().readValue(urlConnection.getInputStream(), Siri.class);
+//					}
+//				}
+				
+				//Parse the SIRI XML response				
+				s = SiriJacksonConfig.getXmlMapperInstance().readValue(url,  Siri.class);
 							
 				endTime = System.nanoTime();
 				
 				getActivity().runOnUiThread(new Runnable(){
 					public void run(){
-						Toast.makeText(getActivity(), "Elapsed Time = " + (endTime - startTime)/1000000 + "ms", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getActivity(), "Elapsed Time = " + (endTime - startTime)/(1000000L) + "ms", Toast.LENGTH_SHORT).show();
 					}
 				});
 			} catch (IOException e) {
@@ -235,7 +248,9 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 				if(urlConnection != null){
 					urlConnection.disconnect();
 				}
-			}			
+			}	
+			
+			
 
 			if (s != null) {
 				SiriUtils.printContents(s);
