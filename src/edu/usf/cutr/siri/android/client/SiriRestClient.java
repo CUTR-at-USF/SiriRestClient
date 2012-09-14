@@ -317,14 +317,14 @@ public class SiriRestClient {
 
 		HttpURLConnection urlConnection = null;
 
-		Log.i(MainActivity.TAG, "Using URL = " + url.toString());
-
 		try {
 
 			disableConnectionReuseIfNecessary(); // For bugs in
 													// HttpURLConnection
 													// pre-Froyo
 			url = new URL(urlString);
+			
+			Log.i(MainActivity.TAG, "Using URL = " + url.toString());
 
 			switch (config.getResponseType()) {
 
