@@ -39,11 +39,11 @@ import uk.org.siri.siri.StopMonitoringDelivery;
 import uk.org.siri.siri.VehicleActivity;
 import uk.org.siri.siri.VehicleMonitoringDelivery;
 
+import android.content.Context;
 /**
  * Android imports
  */
 import android.content.res.Resources.NotFoundException;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 /**
@@ -61,11 +61,11 @@ public class SiriUtils {
 	 * @return the developer key from an unversioned resource file, or empty
 	 *         string if it doesn't exist
 	 */
-	public static String getKeyFromResource(Fragment fragment) {
+	public static String getKeyFromResource(Context context) {
 		String strKey = new String("");
 
 		try {
-			InputStream in = fragment.getResources().openRawResource(R.raw.devkey);
+			InputStream in = context.getResources().openRawResource(R.raw.devkey);
 			BufferedReader r = new BufferedReader(new InputStreamReader(in));
 			StringBuilder total = new StringBuilder();
 
