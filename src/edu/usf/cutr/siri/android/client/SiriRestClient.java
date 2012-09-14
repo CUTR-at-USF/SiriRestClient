@@ -125,7 +125,7 @@ public class SiriRestClient {
 
 		StringBuffer sb = new StringBuffer();
 
-		sb.append(vehMonBaseUrl); // Base URL for stop mon request
+		sb.append(vehMonBaseUrl); // Base URL for veh mon request
 
 		sb.append("." + getResponseTypeFileExtension()); // .json or .xml
 
@@ -175,18 +175,21 @@ public class SiriRestClient {
 
 		if (maximumNumberOfCallsOnwards != -1) {
 			if (maximumNumberOfCallsOnwards >= 1) {
-				sb.append("MaximumNumberOfCallsOnwards ="
+				sb.append("MaximumNumberOfCallsOnwards="
 						+ maximumNumberOfCallsOnwards + "&");
 			} else {
 				throw new IllegalArgumentException(
 						"MaximumNumberOfCallsOnwards must be 1 or greater, or -1 if not to be used");
 			}
 		}
+		
+		//Clean up string to create final URL
+		String url = cleanUpUrl(sb.toString());
 
 		// Make actual HTTP call to server using parameters string we just
 		// built, pre-fixed with the base URL and correct response type
 		// extension
-		return makeRequest(sb.toString().replace(" ", "%20")); // Handle spaces
+		return makeRequest(url);
 
 	}
 
@@ -294,12 +297,35 @@ public class SiriRestClient {
 			}
 		}
 
+		//Clean up string to create final URL
+		String url = cleanUpUrl(sb.toString());
+
 		// Make actual HTTP call to server using parameters string we just
 		// built, pre-fixed with the base URL and correct response type
 		// extension
-		return makeRequest(sb.toString().replace(" ", "%20")); // Handle spaces
+		return makeRequest(url); 
 	}
 
+	/**
+	 * Utility method that takes in a URL string and cleans it up
+	 * 
+	 * @param url url to be cleaned
+	 * @return clean URL
+	 */
+	public String cleanUpUrl(String url){
+		String cleanUrl = url;
+		
+		//If there is a trailing & left over from concatination of variables, remove it
+		 if (url.charAt(url.length()-1)=='&'){
+			 cleanUrl = url.substring(0, url.length()-1);
+		 }
+		 
+		 //Replace any spaces with equivalent charater
+		 cleanUrl = cleanUrl.replace(" ", "%20");
+		 
+		 return cleanUrl;
+	}
+	
 	/**
 	 * Utility method that returns the file extension (e.g., JSON or XML) based
 	 * on response type

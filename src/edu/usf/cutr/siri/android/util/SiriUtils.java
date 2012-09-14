@@ -27,8 +27,9 @@ import java.util.List;
 
 import edu.usf.cutr.siri.android.ui.MainActivity;
 
-import edu.usf.cutr.siri.android.ui.R;
-
+/**
+ * Siri POJO imports
+ */
 import uk.org.siri.siri.AffectedVehicleJourney;
 import uk.org.siri.siri.MonitoredStopVisit;
 import uk.org.siri.siri.PtConsequence;
@@ -40,10 +41,11 @@ import uk.org.siri.siri.StopMonitoringDelivery;
 import uk.org.siri.siri.VehicleActivity;
 import uk.org.siri.siri.VehicleMonitoringDelivery;
 
-import android.content.Context;
 /**
  * Android imports
  */
+import edu.usf.cutr.siri.android.ui.R;
+import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 
