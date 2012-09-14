@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.usf.cutr.siri.android.client;
+package edu.usf.cutr.siri.android.ui;
 
 /**
  * ActionBarSherlock imports for ActionBar support on pre-3.0 devices
@@ -24,6 +24,8 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+
+import edu.usf.cutr.siri.android.ui.StopMonResponseLoader.AppListFragment;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -7,6 +7,7 @@ import java.net.URL;
 import android.os.Build;
 import android.util.Log;
 import uk.org.siri.siri.Siri;
+import edu.usf.cutr.siri.android.ui.MainActivity;
 import edu.usf.cutr.siri.android.util.SiriJacksonConfig;
 
 /**
@@ -18,13 +19,18 @@ import edu.usf.cutr.siri.android.util.SiriJacksonConfig;
  */
 public class SiriRestClient {
 
-	ServerConfig config;
+	//Config settings for server
+	SiriRestClientConfig config;
 
 	// Base URL for vehicle monitoring requests
 	String vehMonBaseUrl;
 
 	// Base URL for stop monitoring requests
 	String stopMonBaseUrl;
+	
+	//Used to time response and parsing
+	long startTime = 0;
+	long endTime = 0;
 
 	/**
 	 * Creates a new SiriRestClient object that can make vehicle monitoring and
@@ -43,7 +49,7 @@ public class SiriRestClient {
 	 *            configuration for requests to be made to the server
 	 */
 	public SiriRestClient(String vehMonBaseUrl, String stopMonBaseUrl,
-			ServerConfig config) {
+			SiriRestClientConfig config) {
 		this.vehMonBaseUrl = vehMonBaseUrl;
 		this.stopMonBaseUrl = stopMonBaseUrl;
 		this.config = config;
@@ -55,7 +61,7 @@ public class SiriRestClient {
 	 * @param config
 	 *            the configuration for requests to be made to the server
 	 */
-	public void setConfig(ServerConfig config) {
+	public void setConfig(SiriRestClientConfig config) {
 		this.config = config;
 	}
 
@@ -64,8 +70,17 @@ public class SiriRestClient {
 	 * 
 	 * @return the current configuration for requests to be made to the server
 	 */
-	public ServerConfig getConfig() {
+	public SiriRestClientConfig getConfig() {
 		return config;
+	}
+	
+	/**
+	 * Returns a benchmark of the amount of time the last request/response/parsing took (in nanoseconds)
+	 *  
+	 * @return a benchmark of the amount of time the last request/response/parsing took (in nanoseconds)
+	 */
+	public long getLastRequestTime(){
+		return endTime - startTime;
 	}
 
 	/**
@@ -100,16 +115,19 @@ public class SiriRestClient {
 	 *            when VehicleMonitoringDetailLevel=calls, or -1 not to limit
 	 * @return a Siri object containing the parsed VehicleMonRequest response
 	 *         from the server
+	 * @throws IllegalArgumentException
+	 *             if the required parameters aren't provided or any parameter
+	 *             is invalid
 	 */
 	public Siri makeVehicleMonRequest(String devKey, String operatorRef,
 			String vehicleRef, String lineRef, int directionRef,
-			String vehicleMonitoringDetailLevel, int maximumNumberOfCallsOnwards) {
+			String vehicleMonitoringDetailLevel, int maximumNumberOfCallsOnwards) throws IllegalArgumentException {
 
 		StringBuffer sb = new StringBuffer();
 
 		sb.append(vehMonBaseUrl); // Base URL for stop mon request
 
-		sb.append("." + getRequestTypeFileExtension()); // .json or .xml
+		sb.append("." + getResponseTypeFileExtension()); // .json or .xml
 
 		sb.append("?");
 
@@ -217,7 +235,7 @@ public class SiriRestClient {
 
 		sb.append(stopMonBaseUrl); // Base URL for stop mon request
 
-		sb.append("." + getRequestTypeFileExtension()); // .json or .xml
+		sb.append("." + getResponseTypeFileExtension()); // .json or .xml
 
 		sb.append("?"); // parameters
 
@@ -284,15 +302,15 @@ public class SiriRestClient {
 
 	/**
 	 * Utility method that returns the file extension (e.g., JSON or XML) based
-	 * on request type
+	 * on response type
 	 * 
 	 * @return "json" if request is JSON, or "xml" if request type is XML
 	 */
-	private String getRequestTypeFileExtension() {
+	private String getResponseTypeFileExtension() {
 		switch (config.getResponseType()) {
-		case ServerConfig.RESPONSE_TYPE_JSON:
+		case SiriRestClientConfig.RESPONSE_TYPE_JSON:
 			return "json";
-		case ServerConfig.RESPONSE_TYPE_XML:
+		case SiriRestClientConfig.RESPONSE_TYPE_XML:
 			return "xml";
 		default:
 			return ""; // should never happen
@@ -324,17 +342,17 @@ public class SiriRestClient {
 													// pre-Froyo
 			url = new URL(urlString);
 			
-			Log.i(MainActivity.TAG, "Using URL = " + url.toString());
+			Log.d(MainActivity.TAG, "Using URL = " + url.toString());
 
 			switch (config.getResponseType()) {
 
-			case ServerConfig.RESPONSE_TYPE_JSON:
+			case SiriRestClientConfig.RESPONSE_TYPE_JSON:
 				// JSON
-				if (config.getHttpConnectionType() == ServerConfig.HTTP_CONNECTION_TYPE_JACKSON) {
+				if (config.getHttpConnectionType() == SiriRestClientConfig.HTTP_CONNECTION_TYPE_JACKSON) {
 					// Use integrated Jackson HTTP connection by passing URL
 					// directly into Jackson object
 
-					if (config.getJacksonObjectType() == ServerConfig.JACKSON_OBJECT_TYPE_READER) {
+					if (config.getJacksonObjectType() == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER) {
 						/*
 						 * Use an ObjectReader (instead of ObjectMapper), read
 						 * from URL directly
@@ -345,53 +363,72 @@ public class SiriRestClient {
 						 * most efficient of the 4 combinations.
 						 */
 						Log.v(MainActivity.TAG,
-								"Using ObjectReader Jackson parser, Jackson HTTP Connection");
+								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectReader Jackson parser, Jackson HTTP Connection");
+						startTime= System.nanoTime();
 						s = SiriJacksonConfig.getObjectReaderInstance()
 								.readValue(url);
+						endTime= System.nanoTime();
 					} else {
 						// Use ObjectMapper, read from URL directly
 						Log.v(MainActivity.TAG,
-								"Using ObjectMapper Jackson parser, Jackson HTTP Connection");
+								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectMapper Jackson parser, Jackson HTTP Connection");
+						startTime= System.nanoTime();
 						s = SiriJacksonConfig.getObjectMapperInstance()
 								.readValue(url, Siri.class);
+						endTime= System.nanoTime();
 					}
 				} else {
-					// Use Android HttpURLConnection
-					urlConnection = (HttpURLConnection) url.openConnection();
-
-					if (config.getJacksonObjectType() == ServerConfig.JACKSON_OBJECT_TYPE_READER) {
+					if (config.getJacksonObjectType() == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER) {
 						// Use ObjectReader with Android HttpURLConnection
 						Log.v(MainActivity.TAG,
-								"Using ObjectReader Jackson parser, Android HttpURLConnection");
+								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectReader Jackson parser, Android HttpURLConnection");
+						startTime= System.nanoTime();
+						// Use Android HttpURLConnection
+						urlConnection = (HttpURLConnection) url.openConnection();
+						
 						s = SiriJacksonConfig.getObjectReaderInstance()
 								.readValue(urlConnection.getInputStream());
+						endTime= System.nanoTime();
 					} else {
 						// Use ObjectMapper with Android HttpURLConnection
 						Log.v(MainActivity.TAG,
-								"Using ObjectMapper Jackson parser, Android HttpURLConnection");
+								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectMapper Jackson parser, Android HttpURLConnection");
+						startTime= System.nanoTime();
+						// Use Android HttpURLConnection
+						urlConnection = (HttpURLConnection) url.openConnection();
 						s = SiriJacksonConfig.getObjectMapperInstance()
 								.readValue(urlConnection.getInputStream(),
 										Siri.class);
+						endTime= System.nanoTime();
 					}
 				}
 
 				break;
-			case ServerConfig.RESPONSE_TYPE_XML:
+			case SiriRestClientConfig.RESPONSE_TYPE_XML:
 				// XML
-				if (config.getHttpConnectionType() == ServerConfig.HTTP_CONNECTION_TYPE_JACKSON) {
+				if (config.getHttpConnectionType() == SiriRestClientConfig.HTTP_CONNECTION_TYPE_JACKSON) {
 					// Use integrated Jackson HTTP connection by passing URL
 					// directly into Jackson object
-					// Parse the SIRI XML response
+					Log.v(MainActivity.TAG,
+							"Using "+ getResponseTypeFileExtension().toUpperCase() + ", Jackson HTTP Connection");
+					
+					// Parse the SIRI XML response					
+					startTime= System.nanoTime();
 					s = SiriJacksonConfig.getXmlMapperInstance().readValue(url,
 							Siri.class);
+					endTime= System.nanoTime();
 
 				} else {
+					Log.v(MainActivity.TAG,
+							"Using "+ getResponseTypeFileExtension().toUpperCase() + ", Android HttpURLConnection");
+					startTime= System.nanoTime();
 					// Use Android HttpURLConnection
 					urlConnection = (HttpURLConnection) url.openConnection();
 
-					// Parse the SIRI XML response
+					// Parse the SIRI XML response					
 					s = SiriJacksonConfig.getXmlMapperInstance().readValue(
 							urlConnection.getInputStream(), Siri.class);
+					endTime= System.nanoTime();
 				}
 
 				break;
@@ -399,6 +436,7 @@ public class SiriRestClient {
 
 		} catch (IOException e) {
 			Log.e(MainActivity.TAG, "Error fetching JSON or XML: " + e);
+			e.printStackTrace();
 		} finally {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
@@ -415,138 +453,5 @@ public class SiriRestClient {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
 			System.setProperty("http.keepAlive", "false");
 		}
-	}
-
-	public class ServerConfig {
-		/**
-		 * Specifies that the request type be to return Javascript Object
-		 * Notation (JSON)
-		 */
-		public static final int RESPONSE_TYPE_JSON = 0;
-
-		/**
-		 * Specifies that the request type be in XML
-		 */
-		public static final int RESPONSE_TYPE_XML = 1;
-
-		/**
-		 * Specifies that the HTTP connection being used is the connection
-		 * embedded within Jackson (default setting)
-		 */
-		public static final int HTTP_CONNECTION_TYPE_JACKSON = 0;
-		/**
-		 * Specifies that the HTTP connection being used is the connection
-		 * defined by the Android HTTPURLConnection
-		 */
-		public static final int HTTP_CONNECTION_TYPE_ANDROID = 1;
-
-		/**
-		 * Specifies that the Jackson object used for parsing JSON is the
-		 * ObjectReader (default setting)
-		 */
-		public static final int JACKSON_OBJECT_TYPE_READER = 0;
-		/**
-		 * Specifies that the Jackson object used for parsing JSON is the
-		 * ObjectMapper
-		 */
-		public static final int JACKSON_OBJECT_TYPE_MAPPER = 1;
-
-		// Holds the current selected values, based on the above constants
-		private int responseType;
-		private int httpConnectionType;
-		private int jacksonObjectType;
-
-		/**
-		 * Constructor used to set up the SiriRestClient with various options,
-		 * based on the constants defined in this class
-		 * 
-		 * @param responseType
-		 *            RESPONSE_TYPE_JSON for JSON, RESPONSE_TYPE_XML for XML
-		 * @param httpConnectionType
-		 *            HTTP_CONNECTION_TYPE_JACKSON to use the connection type
-		 *            internal to Jackson, HTTP_CONNECTION_TYPE_ANDROID to use
-		 *            the Android HTTPURLConnection *
-		 */
-		public ServerConfig(int responseType) {
-
-			if (responseType > 1 || responseType < 0) {
-				throw new IllegalArgumentException(
-						"Input must be constants defined in this class");
-			}
-
-			this.responseType = responseType;
-			this.httpConnectionType = HTTP_CONNECTION_TYPE_JACKSON; // Default
-																	// setting
-			this.jacksonObjectType = JACKSON_OBJECT_TYPE_READER; // Default
-																	// setting
-		}
-
-		/**
-		 * Returns HTTP_CONNECTION_TYPE_JACKSON for the connection type internal
-		 * to Jackson, HTTP_CONNECTION_TYPE_ANDROID for the Android
-		 * HTTPURLConnection
-		 * 
-		 * @return HTTP_CONNECTION_TYPE_JACKSON for the connection type internal
-		 *         to Jackson, HTTP_CONNECTION_TYPE_ANDROID for the Android
-		 *         HTTPURLConnection
-		 */
-		public int getHttpConnectionType() {
-			return httpConnectionType;
-		}
-
-		/**
-		 * Returns the current Jackson Object Type
-		 * 
-		 * @return JACKSON_OBJECT_TYPE_READER for the Jackson ObjectReader,
-		 *         JACKSON_OBJECT_TYPE_MAPPER for the Jackson ObjectMapper, or
-		 *         -1 if not parsing JSON
-		 */
-		public int getJacksonObjectType() {
-			return jacksonObjectType;
-		}
-
-		/**
-		 * Sets Http connection type
-		 * 
-		 * @param httpConnectionType
-		 *            HTTP_CONNECTION_TYPE_JACKSON for the connection type
-		 *            internal to Jackson, HTTP_CONNECTION_TYPE_ANDROID for the
-		 *            Android HTTPURLConnection
-		 */
-		public void setHttpConnectionType(int httpConnectionType) {
-			this.httpConnectionType = httpConnectionType;
-		}
-
-		/**
-		 * Sets the current Jackson Object Type
-		 * 
-		 * @param jacksonObjectType
-		 *            JACKSON_OBJECT_TYPE_READER for the Jackson ObjectReader,
-		 *            JACKSON_OBJECT_TYPE_MAPPER for the Jackson ObjectMapper,
-		 *            or -1 if not parsing JSON
-		 */
-		public void setJacksonObjectType(int jacksonObjectType) {
-			this.jacksonObjectType = jacksonObjectType;
-		}
-
-		/**
-		 * Sets the requested response type
-		 * 
-		 * @param responseType
-		 *            RESPONSE_TYPE_JSON for JSON, RESPONSE_TYPE_XML for XML
-		 */
-		public void setResponseType(int responseType) {
-			this.responseType = responseType;
-		}
-
-		/**
-		 * Gets the requested response type
-		 * 
-		 * @return RESPONSE_TYPE_JSON for JSON, RESPONSE_TYPE_XML for XML
-		 */
-		public int getResponseType() {
-			return responseType;
-		}
-
 	}
 }

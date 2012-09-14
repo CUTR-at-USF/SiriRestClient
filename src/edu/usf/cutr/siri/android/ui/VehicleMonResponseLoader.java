@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.usf.cutr.siri.android.client;
+package edu.usf.cutr.siri.android.ui;
 
 import java.io.File;
 import java.text.Collator;

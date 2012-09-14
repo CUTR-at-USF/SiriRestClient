@@ -25,8 +25,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import edu.usf.cutr.siri.android.client.R;
-import edu.usf.cutr.siri.android.client.MainActivity;
+import edu.usf.cutr.siri.android.ui.MainActivity;
+
+import edu.usf.cutr.siri.android.ui.R;
 
 import uk.org.siri.siri.AffectedVehicleJourney;
 import uk.org.siri.siri.MonitoredStopVisit;

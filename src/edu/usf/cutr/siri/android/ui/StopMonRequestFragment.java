@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.usf.cutr.siri.android.client;
+package edu.usf.cutr.siri.android.ui;
 
 /**
  * Spring imports
@@ -85,7 +85,7 @@ public class StopMonRequestFragment extends SherlockFragment {
       View v = inflater.inflate(R.layout.siri_stop_mon_request, container, false);
             
       //Try to get the developer key from a resource file, if it exists
-      String strKey = SiriUtils.getKeyFromResource(this); 
+      String strKey = SiriUtils.getKeyFromResource(getActivity()); 
             
       key = (EditText) v.findViewById(R.id.key); 
       key.setText(strKey);

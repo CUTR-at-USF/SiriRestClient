@@ -1,4 +1,4 @@
-package edu.usf.cutr.siri.android.client;
+package edu.usf.cutr.siri.android.ui;
 
 import android.os.Bundle;
 
@@ -11,7 +11,7 @@ public class Preferences extends SherlockPreferenceActivity {
 	 * 
 	 * NOTE: Keys must match the values in preferences.xml
 	 */
-	public static final String KEY_REQUEST_TYPE = "pref_key_request_type";	
+	public static final String KEY_RESPONSE_TYPE = "pref_key_response_type";	
 	
 	public static final String KEY_HTTP_CONNECTION_TYPE = "pref_key_http_connection";	
 	
