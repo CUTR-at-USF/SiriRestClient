@@ -133,7 +133,7 @@ public class SiriJacksonConfig {
 			 */
 			module.setDefaultUseWrapper(false);
 
-			XmlMapper xmlMapper = new XmlMapper(f, module);
+			xmlMapper = new XmlMapper(f, module);
 
 			xmlMapper.configure(
 					DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
@@ -152,7 +152,7 @@ public class SiriJacksonConfig {
 
 			// Tell Jackson to expect the XML in PascalCase, instead of
 			// camelCase
-			xmlMapper.setPropertyNamingStrategy(new PascalCaseStrategy());	
+			xmlMapper.setPropertyNamingStrategy(new PascalCaseStrategy());
 		}
 		
 		return xmlMapper;
