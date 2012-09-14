@@ -182,8 +182,8 @@ public class StopMonRequestFragment extends SherlockFragment {
 //              for(Siri l : list){
 //                List<VehicleMonitoringDelivery> listVMD = l.getServiceDelivery().getVehicleMonitoringDelivery();
 //                for(VehicleMonitoringDelivery v : listVMD){
-//                  Log.d(SiriRestClientActivity.TAG, "ResponseTime = " + v.getResponseTimestamp());
-//                  Log.d(SiriRestClientActivity.TAG, "ValidUntil = " + v.getValidUntil());
+//                  Log.d(MainActivity.TAG, "ResponseTime = " + v.getResponseTimestamp());
+//                  Log.d(MainActivity.TAG, "ValidUntil = " + v.getValidUntil());
 //                                    
 //                }
 //              }
@@ -191,7 +191,7 @@ public class StopMonRequestFragment extends SherlockFragment {
               // return list
               return list;
           } catch (Exception e) {
-              Log.e(SiriRestClientActivity.TAG, e.getMessage(), e);
+              Log.e(MainActivity.TAG, e.getMessage(), e);
           }
 
           return null;

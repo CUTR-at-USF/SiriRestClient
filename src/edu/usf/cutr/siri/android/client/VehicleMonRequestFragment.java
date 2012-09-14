@@ -193,7 +193,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			try {
 				url = new URL(urlString);
 				
-				Log.i(SiriRestClientActivity.TAG, "Using URL = " + url.toString());
+				Log.i(MainActivity.TAG, "Using URL = " + url.toString());
 				
 				disableConnectionReuseIfNecessary();  //For bugs in HttpURLConnection pre-Froyo
 				
@@ -210,11 +210,11 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 //						 * (http://wiki.fasterxml.com/JacksonBestPracticesPerformance),
 //						 *  this should be most efficient of the 4 combinations.
 //						 */
-//						Log.v(SiriRestClientActivity.TAG, "Using ObjectReader Jackson parser, Jackson HTTP Connection");
+//						Log.v(MainActivity.TAG, "Using ObjectReader Jackson parser, Jackson HTTP Connection");
 //						s = SiriJacksonConfig.getObjectReaderInstance().readValue(url);
 //					}else{
 //						//Use ObjectMapper, read from URL directly
-//						Log.v(SiriRestClientActivity.TAG, "Using ObjectMapper Jackson parser, Jackson HTTP Connection");
+//						Log.v(MainActivity.TAG, "Using ObjectMapper Jackson parser, Jackson HTTP Connection");
 //						s = SiriJacksonConfig.getObjectMapperInstance().readValue(url, Siri.class);
 //					}					
 //				}else{
@@ -223,11 +223,11 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 //										
 //					if(jacksonObjectType == Preferences.JACKSON_OBJECT_TYPE_READER){
 //						//Use ObjectReader with Android HttpURLConnection
-//						Log.v(SiriRestClientActivity.TAG, "Using ObjectReader Jackson parser, Android HttpURLConnection");
+//						Log.v(MainActivity.TAG, "Using ObjectReader Jackson parser, Android HttpURLConnection");
 //						s = SiriJacksonConfig.getObjectReaderInstance().readValue(urlConnection.getInputStream());
 //					}else{
 //						//Use ObjectMapper with Android HttpURLConnection
-//						Log.v(SiriRestClientActivity.TAG, "Using ObjectMapper Jackson parser, Android HttpURLConnection");
+//						Log.v(MainActivity.TAG, "Using ObjectMapper Jackson parser, Android HttpURLConnection");
 //						s = SiriJacksonConfig.getObjectMapperInstance().readValue(urlConnection.getInputStream(), Siri.class);
 //					}
 //				}
@@ -243,7 +243,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 					}
 				});
 			} catch (IOException e) {
-				Log.e(SiriRestClientActivity.TAG, "Error fetching JSON: " + e);
+				Log.e(MainActivity.TAG, "Error fetching JSON: " + e);
 			}finally{
 				if(urlConnection != null){
 					urlConnection.disconnect();

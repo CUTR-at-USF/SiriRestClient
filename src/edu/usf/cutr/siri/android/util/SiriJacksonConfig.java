@@ -7,6 +7,7 @@ import com.fasterxml.aalto.stax.OutputFactoryImpl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
@@ -108,22 +109,49 @@ public class SiriJacksonConfig {
 	 */
 	private static XmlMapper initXmlMapper(){
 		if(xmlMapper == null){
-			//Use Aalto StAX implementation explicitly
-			XmlFactory f = new XmlFactory(new InputFactoryImpl(), new OutputFactoryImpl());
 			
-			xmlMapper = new XmlMapper(f);
-			
+			// Use Aalto StAX implementation explicitly
+			XmlFactory f = new XmlFactory(new InputFactoryImpl(),
+					new OutputFactoryImpl());
+
+			JacksonXmlModule module = new JacksonXmlModule();
+
+			/*
+			 * Tell Jackson that Lists are using "unwrapped" style (i.e., 
+			 * there is no wrapper element for list). This fixes the error
+			 * "com.fasterxml.jackson.databind.JsonMappingException: Can not
+			 * >> instantiate value of type [simple type, class >>
+			 * uk.org.siri.siri.VehicleMonitoringDelivery] from JSON String;
+			 * no >> single-String constructor/factory method (through
+			 * reference chain: >>
+			 * uk.org.siri.siri.Siri["ServiceDelivery"]->
+			 * uk.org.siri.siri.ServiceDel >>
+			 * ivery["VehicleMonitoringDelivery"])"
+			 * 
+			 * NOTE - This requires Jackson 2.1, which is still pre-release
+			 * as of 9/12/2012
+			 */
+			module.setDefaultUseWrapper(false);
+
+			XmlMapper xmlMapper = new XmlMapper(f, module);
+
 			xmlMapper.configure(
-					DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-			xmlMapper.configure(
-					DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,
+					DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,
 					true);
+			xmlMapper
+					.configure(
+							DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,
+							true);
 			xmlMapper.configure(
-					DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
-			xmlMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING,
+					DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY,
 					true);
-			
-			// Tell Jackson to expect the XML in PascalCase
+			xmlMapper
+					.configure(
+							DeserializationFeature.READ_ENUMS_USING_TO_STRING,
+							true);
+
+			// Tell Jackson to expect the XML in PascalCase, instead of
+			// camelCase
 			xmlMapper.setPropertyNamingStrategy(new PascalCaseStrategy());	
 		}
 		

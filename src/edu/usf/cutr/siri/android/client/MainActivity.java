@@ -44,10 +44,10 @@ import android.support.v4.view.ViewPager;
  * @author Sean J. Barbeau
  * 
  */
-public class SiriRestClientActivity extends SherlockFragmentActivity implements
+public class MainActivity extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
 
-	public static String TAG = "SiriRestClientActivity";
+	public static String TAG = "MainActivity";
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
