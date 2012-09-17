@@ -369,24 +369,84 @@ public class SiriRestClient {
 			url = new URL(urlString);
 			
 			Log.d(MainActivity.TAG, "Using URL = " + url.toString());
+			
+			/**
+			 * The below switch statement tests a variety of different configurations 
+			 * for 1) requesting JSON or XML data from a server and 2) parsing the 
+			 * response into a Siri object via Jackson data binding.
+			 *  
+			 *  For "#1 - Requesting Data", there are two options:
+			 *  	a. Use embedded Jackson HTTP connection - simply pass the URL into
+			 *  	   the Jackson object (e.g., ObjectMapper, ObjectReader, or XmlMapper)
+			 *  	   and Jackson handles establishing an HTTP connection and retrieving
+			 *  	   the data.
+			 *  	b. Use the Android HttpURLConnection - Instantiate our own HTTP connection
+			 *  	   via Android's HttpURLConnection, and pass the InputStream from that
+			 *  	   connection into the Jackson object.
+			 *  
+			 *  	   This article states that HttpURLConnection should be the most efficient 
+			 *  	   connection type on Android:
+			 *         http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+			 *         ...but according to Jackson Best Practices (http://goo.gl/7cRGh), we 
+			 *         should just pass in the URL and let Jackson handle the connection - so,
+			 *         overall best practice is unclear from documentation.  As of 
+			 *         2.1 Jackson seems to just use the default FileInputStream connection
+			 *         (http://goo.gl/zm7Hs) from the normal Java platform, so it would seem
+			 *         that the Android HttpURLConnection would be more efficient.  
+			 *  
+			 * For "#2 - Parsing Response", there are two options for Jackson objects that can
+			 * be used when parsing JSON:
+			 * 		a. Use the ObjectMapper directly - the core class that must be instantiated 
+			 * 		   before parsing JSON content in Jackson.  According to Jackson Best Practices 
+			 * 		   (http://goo.gl/7cRGh), the ObjectReader should be used instead.  Therefore,
+			 * 		   The ObjectMapper configuration is included only for benchmarking performance. 		   
+			 * 		b. Use the ObjectReader - this object is retrieved from the ObjectMapper
+			 * 		   after the ObjectMapper is instantiated, and can be used to parse JSON
+			 * 		   instead of using the ObjectMapper directly.
+			 * 		   According to Jackson Best Practices (http://goo.gl/7cRGh), using the 
+			 * 		   ObjectReader should be more efficient than the ObjectMapper, especially 
+			 * 		   for Jackson versions 2.1 and later. 
+			 * 
+			 * 		Check out the class "SiriJacksonConfig" included in this project to see
+			 * 	    the instantiation and configuration of the ObjectMapper and ObjectReader 
+			 *      classes for JSON parsing.
+			 * 
+			 *      For parsing XML, there is only one option: XmlMapper.
+			 * 
+			 * So, according to Jackson Best Practices Performance: 
+			 * http://wiki.fasterxml.com/JacksonBestPracticesPerformance
+			 * 
+			 * ...and the Android docs:
+			 * http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+			 *	
+			 * ...it seems the most efficient combinations should be:
+			 * 
+			 *  JSON - Android HttpURLConnection + ObjectReader
+			 * 
+			 *  XML - Android HttpURLConnection + XmlMapper
+			 */
 
 			switch (config.getResponseType()) {
 
 			case SiriRestClientConfig.RESPONSE_TYPE_JSON:
 				// JSON
 				if (config.getHttpConnectionType() == SiriRestClientConfig.HTTP_CONNECTION_TYPE_JACKSON) {
-					// Use integrated Jackson HTTP connection by passing URL
-					// directly into Jackson object
+					/**
+					 * Use integrated Jackson HTTP connection by passing URL directly into Jackson object
+					 * for below two options
+					 */
 
 					if (config.getJacksonObjectType() == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER) {
 						/*
 						 * Use an ObjectReader (instead of ObjectMapper), read
-						 * from URL directly
+						 * from URL directly using internal Jackson connection
 						 * 
 						 * According to Jackson Best Practices
 						 * (http://wiki.fasterxml
 						 * .com/JacksonBestPracticesPerformance), this should be
-						 * most efficient of the 4 combinations.
+						 * most efficient of the 4 JSON configuration combinations.
+						 * 
+						 * However, Android docs suggest that HttpURLConnection is more efficient.
 						 */
 						Log.d(MainActivity.TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectReader Jackson parser, Jackson HTTP Connection");
@@ -395,7 +455,10 @@ public class SiriRestClient {
 								.readValue(url);
 						endTime= System.nanoTime();
 					} else {
-						// Use ObjectMapper, read from URL directly
+						/* Use ObjectMapper, read from URL directly
+						 * ObjectReader should be more efficient than the ObjectMapper.  
+						 * So, we include this only for performance benchmarking tests.
+						 */
 						Log.v(MainActivity.TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectMapper Jackson parser, Jackson HTTP Connection");
 						startTime= System.nanoTime();
@@ -404,23 +467,36 @@ public class SiriRestClient {
 						endTime= System.nanoTime();
 					}
 				} else {
+					/**
+					 * Use Android HttpURLConnection for below two options
+					 */
 					if (config.getJacksonObjectType() == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER) {
-						// Use ObjectReader with Android HttpURLConnection
+						/*
+						 *  Use ObjectReader with Android HttpURLConnection
+						 *  
+						 *  From our analysis of both Android and Jackson docs,
+						 *  this should be the most efficient of the 4 JSON combinations.
+						 */
 						Log.v(MainActivity.TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectReader Jackson parser, Android HttpURLConnection");
 						startTime= System.nanoTime();
-						// Use Android HttpURLConnection
+						// Use Android HttpURLConnection - this should be more efficient than internal JSON HTTP connection
 						urlConnection = (HttpURLConnection) url.openConnection();
 						
 						s = SiriJacksonConfig.getObjectReaderInstance()
 								.readValue(urlConnection.getInputStream());
 						endTime= System.nanoTime();
 					} else {
-						// Use ObjectMapper with Android HttpURLConnection
+						/* Use ObjectMapper with Android HttpURLConnection
+						 * 
+						 * According to Jackson Best Practices (http://wiki.fasterxml.com/JacksonBestPracticesPerformance),
+						 * the ObjectReader should be more efficient than the ObjectMapper.  So, we include this only for
+						 * performance benchmarking tests.
+						 */
 						Log.v(MainActivity.TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectMapper Jackson parser, Android HttpURLConnection");
 						startTime= System.nanoTime();
-						// Use Android HttpURLConnection
+						// Use Android HttpURLConnection - this should be more efficient than internal JSON HTTP connection
 						urlConnection = (HttpURLConnection) url.openConnection();
 						s = SiriJacksonConfig.getObjectMapperInstance()
 								.readValue(urlConnection.getInputStream(),
@@ -430,11 +506,15 @@ public class SiriRestClient {
 				}
 
 				break;
+				
 			case SiriRestClientConfig.RESPONSE_TYPE_XML:
 				// XML
 				if (config.getHttpConnectionType() == SiriRestClientConfig.HTTP_CONNECTION_TYPE_JACKSON) {
-					// Use integrated Jackson HTTP connection by passing URL
-					// directly into Jackson object
+					/*
+					 *  Use integrated Jackson HTTP connection by passing URL directly into Jackson object
+					 *  Jackson Best Practices says this should be most efficient, but Android docs suggest 
+					 *  Android HttpURLConnection is better.
+					 */
 					Log.v(MainActivity.TAG,
 							"Using "+ getResponseTypeFileExtension().toUpperCase() + ", Jackson HTTP Connection");
 					
@@ -445,6 +525,10 @@ public class SiriRestClient {
 					endTime= System.nanoTime();
 
 				} else {
+					/*
+					 *  Use Android HttpURLConnection.  Android docs say this is best, but
+					 *  Jackson Best Practices says integrated HTTP connection is better for normal Java platform.
+					 */
 					Log.v(MainActivity.TAG,
 							"Using "+ getResponseTypeFileExtension().toUpperCase() + ", Android HttpURLConnection");
 					startTime= System.nanoTime();
