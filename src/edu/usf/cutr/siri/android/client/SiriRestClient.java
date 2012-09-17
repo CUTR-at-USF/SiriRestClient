@@ -315,12 +315,12 @@ public class SiriRestClient {
 	public String cleanUpUrl(String url){
 		String cleanUrl = url;
 		
-		//If there is a trailing & left over from concatination of variables, remove it
+		//If there is a trailing '&' left over from concatination of variables, remove it
 		 if (url.charAt(url.length()-1)=='&'){
 			 cleanUrl = url.substring(0, url.length()-1);
 		 }
 		 
-		 //Replace any spaces with equivalent charater
+		 //Replace any spaces with equivalent characters
 		 cleanUrl = cleanUrl.replace(" ", "%20");
 		 
 		 return cleanUrl;
@@ -388,7 +388,7 @@ public class SiriRestClient {
 						 * .com/JacksonBestPracticesPerformance), this should be
 						 * most efficient of the 4 combinations.
 						 */
-						Log.v(MainActivity.TAG,
+						Log.d(MainActivity.TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectReader Jackson parser, Jackson HTTP Connection");
 						startTime= System.nanoTime();
 						s = SiriJacksonConfig.getObjectReaderInstance()
@@ -463,6 +463,9 @@ public class SiriRestClient {
 		} catch (IOException e) {
 			Log.e(MainActivity.TAG, "Error fetching JSON or XML: " + e);
 			e.printStackTrace();
+			//Reset timestamps to show there was an error
+			startTime = 0;
+			endTime = 0;
 		} finally {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
