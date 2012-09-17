@@ -54,11 +54,11 @@
     <string name="pref_response_type_dialog_title">Response Type</string>
     <string name="pref_response_type_default_value">0</string>
     
-    <!-- Jackson parsing -->
+    <!-- Jackson JSON parsing -->
     <string name="pref_category_json_parsing_title">JSON Parsing</string>
-    <string name="pref_jackson_object_title">Jackson Parser Type</string>
+    <string name="pref_jackson_object_title">Jackson JSON Parser Type</string>
     <string name="pref_jackson_object_summary">Select the ObjectMapper or ObjectReader to perform JSON parsing</string>
-    <string name="pref_jackson_object_dialog_title">Jackson Parser Type</string>
+    <string name="pref_jackson_object_dialog_title">Jackson JSON Parser Type</string>
     <string name="pref_jackson_object_default_value">0</string>
        
     <!-- HTTP Connection -->

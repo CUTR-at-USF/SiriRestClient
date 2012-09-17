@@ -151,17 +151,6 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 		@Override
 		protected Siri doInBackground(Void... params) {
 
-			// String urlString =
-			// "http://bustime.mta.info/api/siri/vehicle-monitoring.json?OperatorRef=MTA%20NYCT&DirectionRef=0&LineRef=MTA%20NYCT_S40";
-
-			// String url = "http://bustime.mta.info/api/siri" +
-			// "/vehicle-monitoring.json?OperatorRef=MTA NYCT";
-			// final String url = "http://bustime.mta.info/api/siri" +
-			// "/vehicle-monitoring.json?" +
-			// "key={key}&OperatorRef={operatorRef}&VehicleRef={vehicleRef}&LineRef={lineRef}&DirectionRef={directionRef}"
-			// +
-			// "&VehicleMonitoringDetailLevel={vehicleMonitoringDetailLevel}&MaximumNumberOfCallsOnwards={maximumNumberOfCallsOnwards}";
-
 			// Sample vehicle request:
 			// http://bustime.mta.info/api/siri/vehicle-monitoring.json?OperatorRef=MTA%20NYCT&DirectionRef=0&LineRef=MTA%20NYCT_S40
 			// Sample stop monitoring request:
@@ -169,7 +158,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 
 			Siri s = null;
 
-			// Get user preferences
+			// Get user preferences for connection and parsing types.
 			SharedPreferences sharedPref = PreferenceManager
 					.getDefaultSharedPreferences(getActivity());
 			int responseType = Integer.parseInt(sharedPref.getString(
