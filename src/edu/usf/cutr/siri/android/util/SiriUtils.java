@@ -150,32 +150,35 @@ public class SiriUtils {
                 	Log.i(MainActivity.TAG, "ProgressStatus: " + va.getMonitoredVehicleJourney().getProgressStatus());
                 	Log.i(MainActivity.TAG, "BlockRef: " + va.getMonitoredVehicleJourney().getBlockRef());
                 	Log.i(MainActivity.TAG, "VehicleRef: " + va.getMonitoredVehicleJourney().getVehicleRef());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.PresentableDistance: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getPresentableDistance());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.DistanceFromCall: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getDistanceFromCall());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.StopsFromCall: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getStopsFromCall());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.CallDistanceAlongRoute: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getCallDistanceAlongRoute());
-                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointRef: " + va.getMonitoredVehicleJourney().getMonitoredCall().getStopPointRef());
-                	Log.i(MainActivity.TAG, "MonitoredCall.VisitNumber: " + va.getMonitoredVehicleJourney().getMonitoredCall().getVisitNumber());
-                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointName: " + va.getMonitoredVehicleJourney().getMonitoredCall().getStopPointName());
-                	
-                	Log.i(MainActivity.TAG, "OnwardCalls.AimedArrivalTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getAimedArrivalTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.AimedDepartureTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getAimedDepartureTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.AimedHeadwayInterval: " + va.getMonitoredVehicleJourney().getOnwardCalls().getAimedHeadwayInterval());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalBoardingActivity: " + va.getMonitoredVehicleJourney().getOnwardCalls().getArrivalBoardingActivity());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalPlatformName: " + va.getMonitoredVehicleJourney().getOnwardCalls().getArrivalPlatformName());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalStatus: " + va.getMonitoredVehicleJourney().getOnwardCalls().getArrivalStatus());
-                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureBoardingActivity: " + va.getMonitoredVehicleJourney().getOnwardCalls().getDepartureBoardingActivity());
-                	Log.i(MainActivity.TAG, "OnwardCalls.DeparturePlatformName: " + va.getMonitoredVehicleJourney().getOnwardCalls().getDeparturePlatformName());
-                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureStatus: " + va.getMonitoredVehicleJourney().getOnwardCalls().getDepartureStatus());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedArrivalTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExpectedArrivalTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedDepartureTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExpectedDepartureTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedHeadwayInterval: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExpectedHeadwayInterval());                	               	
-                	
-                	if(va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions() != null){
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.PresentableDistance: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getPresentableDistance());
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.DistanceFromCall: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getDistanceFromCall());
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.StopsFromCall: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getStopsFromCall());
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.CallDistanceAlongRoute: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getCallDistanceAlongRoute());
+                	if(va.getMonitoredVehicleJourney().getMonitoredCall() != null){
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.PresentableDistance: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getPresentableDistance());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.DistanceFromCall: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getDistanceFromCall());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.StopsFromCall: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getStopsFromCall());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.CallDistanceAlongRoute: " + va.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getCallDistanceAlongRoute());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointRef: " + va.getMonitoredVehicleJourney().getMonitoredCall().getStopPointRef());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.VisitNumber: " + va.getMonitoredVehicleJourney().getMonitoredCall().getVisitNumber());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointName: " + va.getMonitoredVehicleJourney().getMonitoredCall().getStopPointName());
+                	}
+                	if(va.getMonitoredVehicleJourney().getOnwardCalls() != null){
+	                	Log.i(MainActivity.TAG, "OnwardCalls.AimedArrivalTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getAimedArrivalTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.AimedDepartureTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getAimedDepartureTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.AimedHeadwayInterval: " + va.getMonitoredVehicleJourney().getOnwardCalls().getAimedHeadwayInterval());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalBoardingActivity: " + va.getMonitoredVehicleJourney().getOnwardCalls().getArrivalBoardingActivity());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalPlatformName: " + va.getMonitoredVehicleJourney().getOnwardCalls().getArrivalPlatformName());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalStatus: " + va.getMonitoredVehicleJourney().getOnwardCalls().getArrivalStatus());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureBoardingActivity: " + va.getMonitoredVehicleJourney().getOnwardCalls().getDepartureBoardingActivity());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.DeparturePlatformName: " + va.getMonitoredVehicleJourney().getOnwardCalls().getDeparturePlatformName());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureStatus: " + va.getMonitoredVehicleJourney().getOnwardCalls().getDepartureStatus());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedArrivalTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExpectedArrivalTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedDepartureTime: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExpectedDepartureTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedHeadwayInterval: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExpectedHeadwayInterval());                	               	
+	                	
+	                	if(va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions() != null){
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.PresentableDistance: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getPresentableDistance());
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.DistanceFromCall: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getDistanceFromCall());
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.StopsFromCall: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getStopsFromCall());
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.CallDistanceAlongRoute: " + va.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getCallDistanceAlongRoute());
+	                	}
                 	}
                 	
                 	Log.i(MainActivity.TAG, "RecordedAtTime: " + va.getRecordedAtTime());
@@ -239,32 +242,37 @@ public class SiriUtils {
                 	Log.i(MainActivity.TAG, "ProgressStatus: " + msv.getMonitoredVehicleJourney().getProgressStatus());
                 	Log.i(MainActivity.TAG, "BlockRef: " + msv.getMonitoredVehicleJourney().getBlockRef());
                 	Log.i(MainActivity.TAG, "VehicleRef: " + msv.getMonitoredVehicleJourney().getVehicleRef());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.PresentableDistance: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getPresentableDistance());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.DistanceFromCall: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getDistanceFromCall());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.StopsFromCall: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getStopsFromCall());
-                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.CallDistanceAlongRoute: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getCallDistanceAlongRoute());
-                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointRef: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getStopPointRef());
-                	Log.i(MainActivity.TAG, "MonitoredCall.VisitNumber: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getVisitNumber());
-                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointName: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getStopPointName());
                 	
-                	Log.i(MainActivity.TAG, "OnwardCalls.AimedArrivalTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getAimedArrivalTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.AimedDepartureTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getAimedDepartureTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.AimedHeadwayInterval: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getAimedHeadwayInterval());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalBoardingActivity: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getArrivalBoardingActivity());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalPlatformName: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getArrivalPlatformName());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalStatus: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getArrivalStatus());
-                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureBoardingActivity: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getDepartureBoardingActivity());
-                	Log.i(MainActivity.TAG, "OnwardCalls.DeparturePlatformName: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getDeparturePlatformName());
-                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureStatus: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getDepartureStatus());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedArrivalTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExpectedArrivalTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedDepartureTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExpectedDepartureTime());
-                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedHeadwayInterval: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExpectedHeadwayInterval());                	               	
+                	if(msv.getMonitoredVehicleJourney().getMonitoredCall() != null){
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.PresentableDistance: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getPresentableDistance());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.DistanceFromCall: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getDistanceFromCall());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.StopsFromCall: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getStopsFromCall());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.Extensions.Distances.CallDistanceAlongRoute: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getExtensions().getDistances().getCallDistanceAlongRoute());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointRef: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getStopPointRef());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.VisitNumber: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getVisitNumber());
+	                	Log.i(MainActivity.TAG, "MonitoredCall.StopPointName: " + msv.getMonitoredVehicleJourney().getMonitoredCall().getStopPointName());
+                	}
                 	
-                	if(msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions() != null){
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.PresentableDistance: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getPresentableDistance());
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.DistanceFromCall: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getDistanceFromCall());
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.StopsFromCall: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getStopsFromCall());
-                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.CallDistanceAlongRoute: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getCallDistanceAlongRoute());
+                	if(msv.getMonitoredVehicleJourney().getOnwardCalls() != null){
+	                	Log.i(MainActivity.TAG, "OnwardCalls.AimedArrivalTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getAimedArrivalTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.AimedDepartureTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getAimedDepartureTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.AimedHeadwayInterval: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getAimedHeadwayInterval());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalBoardingActivity: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getArrivalBoardingActivity());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalPlatformName: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getArrivalPlatformName());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ArrivalStatus: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getArrivalStatus());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureBoardingActivity: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getDepartureBoardingActivity());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.DeparturePlatformName: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getDeparturePlatformName());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.DepartureStatus: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getDepartureStatus());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedArrivalTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExpectedArrivalTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedDepartureTime: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExpectedDepartureTime());
+	                	Log.i(MainActivity.TAG, "OnwardCalls.ExpectedHeadwayInterval: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExpectedHeadwayInterval());                	               	
+	                	
+	                	if(msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions() != null){
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.PresentableDistance: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getPresentableDistance());
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.DistanceFromCall: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getDistanceFromCall());
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.StopsFromCall: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getStopsFromCall());
+	                		Log.i(MainActivity.TAG, "OnwardCalls.Extensions.Distances.CallDistanceAlongRoute: " + msv.getMonitoredVehicleJourney().getOnwardCalls().getExtensions().getDistances().getCallDistanceAlongRoute());
+	                	}
                 	}
                 	
                 	Log.i(MainActivity.TAG, "RecordedAtTime: " + msv.getRecordedAtTime());

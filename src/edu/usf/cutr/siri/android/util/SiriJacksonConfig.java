@@ -7,11 +7,10 @@ import com.fasterxml.aalto.stax.OutputFactoryImpl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-
-import edu.usf.cutr.siri.jackson.PascalCaseStrategy;
 
 /**
  * This class holds a static instance of a Jackson ObjectMapper that is
@@ -88,7 +87,7 @@ public class SiriJacksonConfig {
 
 			// Tell Jackson to expect the JSON in PascalCase, instead of
 			// camelCase
-			mapper.setPropertyNamingStrategy(new PascalCaseStrategy());			
+			mapper.setPropertyNamingStrategy(new PropertyNamingStrategy.PascalCaseStrategy());			
 		}
 		return mapper;
 	}
@@ -152,7 +151,7 @@ public class SiriJacksonConfig {
 
 			// Tell Jackson to expect the XML in PascalCase, instead of
 			// camelCase
-			xmlMapper.setPropertyNamingStrategy(new PascalCaseStrategy());
+			xmlMapper.setPropertyNamingStrategy(new PropertyNamingStrategy.PascalCaseStrategy());
 		}
 		
 		return xmlMapper;
