@@ -132,11 +132,13 @@ public class SiriUtils {
             		Log.i(MainActivity.TAG, "------------------");
                 	Log.i(MainActivity.TAG, "- Situation Ref: -");
                 	Log.i(MainActivity.TAG, "------------------");
-                	List<SituationRef> srList = va.getMonitoredVehicleJourney().getSituationRef();                	
-                	for(SituationRef sr : srList){
-                		Log.i(MainActivity.TAG, "SituationRef: " + sr.getSituationSimpleRef());
-                		Log.i(MainActivity.TAG, "SituationRef.FullRef: " + sr.getSituationFullRef());
-                		
+                	List<SituationRef> srList = va.getMonitoredVehicleJourney().getSituationRef();
+                	if(srList != null){
+	                	for(SituationRef sr : srList){
+	                		Log.i(MainActivity.TAG, "SituationRef: " + sr.getSituationSimpleRef());
+	                		Log.i(MainActivity.TAG, "SituationRef.FullRef: " + sr.getSituationFullRef());
+	                		
+	                	}
                 	}
                 	Log.i(MainActivity.TAG, "----------------");
                 	
@@ -219,11 +221,13 @@ public class SiriUtils {
             		Log.i(MainActivity.TAG, "------------------");
                 	Log.i(MainActivity.TAG, "- Situation Ref: -");
                 	Log.i(MainActivity.TAG, "------------------");
-                	List<SituationRef> srList = msv.getMonitoredVehicleJourney().getSituationRef();                	
-                	for(SituationRef sr : srList){
-                		Log.i(MainActivity.TAG, "SituationRef: " + sr.getSituationSimpleRef());
-                		Log.i(MainActivity.TAG, "SituationRef.FullRef: " + sr.getSituationFullRef());
-                		
+                	List<SituationRef> srList = msv.getMonitoredVehicleJourney().getSituationRef();
+                	if(srList != null){
+	                	for(SituationRef sr : srList){
+	                		Log.i(MainActivity.TAG, "SituationRef: " + sr.getSituationSimpleRef());
+	                		Log.i(MainActivity.TAG, "SituationRef.FullRef: " + sr.getSituationFullRef());
+	                		
+	                	}
                 	}
                 	Log.i(MainActivity.TAG, "----------------");
                 	
