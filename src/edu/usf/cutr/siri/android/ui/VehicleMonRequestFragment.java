@@ -22,6 +22,8 @@ package edu.usf.cutr.siri.android.ui;
 //import org.springframework.android.showcase.rest.State;
 //import org.springframework.android.showcase.rest.StatesListAdapter;
 
+import java.text.DecimalFormat;
+
 import uk.org.siri.siri.Siri;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -67,6 +69,9 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 	EditText directionRef;
 	EditText vehicleMonitoringDetailLevel;
 	EditText maximumNumberOfCallsOnwards;
+
+	// Used to format decimals to 3 places
+	DecimalFormat df = new DecimalFormat("#.###");
 
 	public VehicleMonRequestFragment() {
 	}
@@ -179,39 +184,61 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			config.setHttpConnectionType(httpConnectionType);
 			config.setJacksonObjectType(jacksonObjectType);
 
-			//Get integer values from TextBoxes
+			// Get integer values from TextBoxes
 			int directionRefInt = -1, maximumNumberOfCallsOnwardsInt = -1;
-			try{
-				directionRefInt = Integer.parseInt(directionRef.getText().toString());
-			}catch(NumberFormatException e){
-				Log.w(MainActivity.TAG, "Invalid value entered for DirectionRef: " + e);
-			}			
-			try{
-				maximumNumberOfCallsOnwardsInt = Integer.parseInt(maximumNumberOfCallsOnwards.getText().toString());
-			}catch(NumberFormatException e){
-				Log.w(MainActivity.TAG, "Invalid value entered for MaximumNumberOfCallsOnwardsInt: " + e);
+			try {
+				directionRefInt = Integer.parseInt(directionRef.getText()
+						.toString());
+			} catch (NumberFormatException e) {
+				Log.w(MainActivity.TAG,
+						"Invalid value entered for DirectionRef: " + e);
 			}
-			
-			//Instantiate client with URLs for server and config
+			try {
+				maximumNumberOfCallsOnwardsInt = Integer
+						.parseInt(maximumNumberOfCallsOnwards.getText()
+								.toString());
+			} catch (NumberFormatException e) {
+				Log.w(MainActivity.TAG,
+						"Invalid value entered for MaximumNumberOfCallsOnwardsInt: "
+								+ e);
+			}
+
+			// Instantiate client with URLs for server and config
 			SiriRestClient client = new SiriRestClient(
 					"http://bustime.mta.info/api/siri/vehicle-monitoring",
 					"http://bustime.mta.info/api/siri/stop-monitoring", config);
-						
-			//Make request to server
-			s = client.makeVehicleMonRequest(key.getText().toString(), operatorRef
-					.getText().toString(), vehicleRef.getText().toString(),
-					lineRef.getText().toString(), directionRefInt,
-					vehicleMonitoringDetailLevel.getText().toString(),
-					maximumNumberOfCallsOnwardsInt);
+
+			// Make request to server
+			s = client.makeVehicleMonRequest(key.getText().toString(),
+					operatorRef.getText().toString(), vehicleRef.getText()
+							.toString(), lineRef.getText().toString(),
+					directionRefInt, vehicleMonitoringDetailLevel.getText()
+							.toString(), maximumNumberOfCallsOnwardsInt);
 
 			final long elapsedTime = client.getLastRequestTime();
 
 			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					Toast.makeText(
-							getActivity(),
-							"Elapsed Time = " + (elapsedTime) / (1000000L)
-									+ "ms", Toast.LENGTH_SHORT).show();
+					if (elapsedTime != 0) {
+						// Request was successful. Show the amount of time it
+						// took
+						Toast.makeText(
+								getActivity(),
+								"Elapsed Time = "
+										+ df.format((elapsedTime) / (1000000.0))
+										+ "ms", Toast.LENGTH_SHORT).show();
+						Log.d(MainActivity.TAG,
+								"Elapsed Time = "
+										+ df.format((elapsedTime) / (1000000.0))
+										+ "ms");
+					} else {
+						// Request was NOT successful. Show error message.
+						Toast.makeText(getActivity(),
+								"An error occured during the last request.",
+								Toast.LENGTH_SHORT).show();
+						Log.d(MainActivity.TAG,
+								"An error occured during the last request.");
+					}
 				}
 			});
 
@@ -252,15 +279,6 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			if (progressDialog != null && !destroyed) {
 				progressDialog.dismiss();
 			}
-		}
-	}
-
-	/**
-	 * Disable HTTP connection reuse which was buggy pre-froyo
-	 */
-	private void disableConnectionReuseIfNecessary() {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
-			System.setProperty("http.keepAlive", "false");
 		}
 	}
 }
