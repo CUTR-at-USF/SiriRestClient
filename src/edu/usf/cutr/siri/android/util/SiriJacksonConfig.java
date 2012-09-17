@@ -32,6 +32,9 @@ public class SiriJacksonConfig {
 	
 	//For XML
 	private static XmlMapper xmlMapper = null;
+	
+	//Private empty constructor since this object shouldn't be instantiated
+	private SiriJacksonConfig() {}
 
 	/**
 	 * Constructs a thread-safe instance of a Jackson ObjectMapper configured to parse
