@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 import uk.org.siri.siri.Siri;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -239,8 +241,93 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 				if (numRequests > 1) {
 					publishProgress((int) ((i / (float) numRequests) * 100));
 				}
+				
+				if(isCancelled()){
+					//User aborted the task, so we need to cleanly stop this task
+					Log.d(MainActivity.TAG,
+							"User canceled the task.");
+					return s;
+				}
 			}
 
+			//Print out and display the results
+			showResults();			
+
+			//Return most recent Siri object
+			return s;
+		}
+		
+		@Override
+		protected void onPostExecute(Siri result) {
+			// hide the progress indicator when the network request is complete
+			dismissProgressDialog();
+
+			// return the list of vehicle info
+			refreshStates(result);
+		}
+					
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			// Update the progress UI with a percent complete when running
+			// multiple tests
+			progressDialog.setIndeterminate(false);
+			setProgressPercent(progress[0]);
+		}
+
+		// ***************************************
+		// Public methods
+		// ***************************************
+		public void showLoadingProgressDialog() {
+			this.showProgressDialog("Requesting. Please wait...");
+		}
+
+		public void showProgressDialog(CharSequence message) {
+			if (progressDialog == null) {
+				progressDialog = new ProgressDialog(getActivity());
+			}
+
+			// Show progress as tests are completed
+			progressDialog.setIndeterminate(true);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			//Allow the user to cancel the request, and clean up afterwords
+			progressDialog.setOnCancelListener(new OnCancelListener() {
+	            public void onCancel(DialogInterface arg0) {
+	                 dismissProgressDialog();	                 
+	                 cancel(true);
+	            }
+	        });
+
+			// Show an indeterminate spinner in the Activity title bar,
+			// to tell the user something is going on during the initial
+			// server request
+			getActivity().setProgressBarIndeterminateVisibility(Boolean.TRUE);
+
+			progressDialog.setMessage(message);
+			progressDialog.show();
+		}
+
+		/**
+		 * If we executing several requests, we'll show the user how close we
+		 * are to finished.
+		 * 
+		 * @param percent
+		 *            percentage of total tests that are complete
+		 */
+		public void setProgressPercent(int percent) {
+			progressDialog.setProgress(percent);
+		}
+
+		public void dismissProgressDialog() {
+			if (progressDialog != null && !destroyed) {
+				progressDialog.dismiss();				
+			}
+			
+			// Shut down the indeterminate progress indicator on the Activity
+			// Action Bar
+			getActivity().setProgressBarIndeterminateVisibility(Boolean.FALSE);
+		}
+		
+		public void showResults(){
 			if (numRequests == 1) {
 				// If there was only one test, then show a Toast of the single
 				// result
@@ -289,72 +376,6 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			Log.d(MainActivity.TAG,
 					"Elapsed times test results in milliseconds:");
 			Log.d(MainActivity.TAG, elapsedTimes.toString());
-
-			return s;
-		}
-
-		@Override
-		protected void onPostExecute(Siri result) {
-			// hide the progress indicator when the network request is complete
-			dismissProgressDialog();
-
-			// return the list of vehicle info
-			refreshStates(result);
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-			// Update the progress UI with a percent complete when running
-			// multiple tests
-			progressDialog.setIndeterminate(false);
-			setProgressPercent(progress[0]);
-		}
-
-		// ***************************************
-		// Public methods
-		// ***************************************
-		public void showLoadingProgressDialog() {
-			this.showProgressDialog("Requesting. Please wait...");
-		}
-
-		public void showProgressDialog(CharSequence message) {
-			if (progressDialog == null) {
-				progressDialog = new ProgressDialog(getActivity());
-			}
-
-			// Show progress as tests are completed
-			progressDialog.setIndeterminate(true);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-
-			// Show an indeterminate spinner in the Activity title bar,
-			// to tell the user something is going on during the initial
-			// server request
-			getActivity().setProgressBarIndeterminateVisibility(Boolean.TRUE);
-
-			progressDialog.setMessage(message);
-			progressDialog.show();
-		}
-
-		/**
-		 * If we executing several requests, we'll show the user how close we
-		 * are to finished.
-		 * 
-		 * @param percent
-		 *            percentage of total tests that are complete
-		 */
-		public void setProgressPercent(int percent) {
-			progressDialog.setProgress(percent);
-		}
-
-		public void dismissProgressDialog() {
-			if (progressDialog != null && !destroyed) {
-				progressDialog.dismiss();
-			}
-
-			// Shut down the indeterminate progress indicator on the Activity
-			// Action Bar
-			getActivity().setProgressBarIndeterminateVisibility(Boolean.FALSE);
-
 		}
 	}
 }
