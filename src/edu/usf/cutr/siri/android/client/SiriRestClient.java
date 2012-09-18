@@ -368,7 +368,8 @@ public class SiriRestClient {
 													// pre-Froyo
 			url = new URL(urlString);
 			
-			Log.d(MainActivity.TAG, "Using URL = " + url.toString());
+			Log.d(MainActivity.TAG, "Using URL:");
+			Log.d(MainActivity.TAG, url.toString());
 			
 			/**
 			 * The below switch statement tests a variety of different configurations 
