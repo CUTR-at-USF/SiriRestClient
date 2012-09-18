@@ -68,4 +68,11 @@
     <string name="pref_http_connection_dialog_title">HTTP Connection Type</string>
     <string name="pref_http_connection_default_value">0</string>
     
+    <!-- Number of test requests to run consecutively -->
+    <string name="pref_category_tests_title">Test Parameters</string>
+    <string name="pref_num_requests_title">Number of Consecutive Requests</string>
+    <string name="pref_num_requests_summary">Sets the number of consecutive requests to execute when the Submit button is tapped (for time benchmarking).</string>
+    <string name="pref_num_requests_dialog_title">Set Number of Requests</string>
+    <string name="pref_num_requests_default_value">1</string>
+    
 </resources>

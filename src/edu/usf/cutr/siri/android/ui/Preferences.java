@@ -23,6 +23,8 @@ public class Preferences extends SherlockPreferenceActivity {
 	public static final String KEY_HTTP_CONNECTION_TYPE = "pref_key_http_connection";
 
 	public static final String KEY_JACKSON_OBJECT_TYPE = "pref_key_jackson_object";
+	
+	public static final String KEY_NUM_REQUESTS = "pref_key_num_requests";
 
 	ListPreference responseTypes;
 	ListPreference jacksonJsonObjectTypes;

@@ -24,6 +24,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 import edu.usf.cutr.siri.android.ui.StopMonResponseLoader.AppListFragment;
 
@@ -70,16 +71,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock);
 		super.onCreate(savedInstanceState);
+		// Request use of spinner for showing indeterminate progress, to show
+		// the user somethings going on during long-running operations
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
+		
 		// Create the adapter that will return a fragment for each of the three
-		// primary sections
-		// of the app.
+		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
 
 		// Set up the action bar.
 		final com.actionbarsherlock.app.ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(com.actionbarsherlock.app.ActionBar.NAVIGATION_MODE_TABS);
+		actionBar
+				.setNavigationMode(com.actionbarsherlock.app.ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setTitle(getApplicationContext().getText(R.string.app_name));
 
 		// Set up the ViewPager with the sections adapter.
@@ -87,8 +92,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
-		// tab.
-		// We can also use ActionBar.Tab#select() to do this if we have a
+		// tab. We can also use ActionBar.Tab#select() to do this if we have a
 		// reference to the Tab.
 		mViewPager
 				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -107,7 +111,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
-		}		
+		}
+
+		//Hide the indeterminate progress bar on the activity until we need it
+		setProgressBarIndeterminateVisibility(Boolean.FALSE);
 	}
 
 	/**
@@ -118,16 +125,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle menu item selection
-		switch(item.getItemId()){
-			case R.id.menu_settings:
-				//Show settings menu
-				startActivity(new Intent(this, Preferences.class));
-			default:
-				return super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			// Show settings menu
+			startActivity(new Intent(this, Preferences.class));
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
