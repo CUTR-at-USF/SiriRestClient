@@ -52,10 +52,19 @@
              Some JARs for XML are bundled manually in 
              libs directory, since they require processing
              before they can work on Android.  See:
-             https://github.com/CUTR-at-USF/SiriRestClient/wiki/Dependencies
+             https://github.com/CUTR-at-USF/SiriRestClient/wiki/Modifying-XML-libraries-for-Android
               -->        
 	</dependencies>
+    
+    <!-- For Jackson SNAPSHOTs -->
+    <repositories>
+      <repository>
+        <id>sonatype-nexus-snapshots</id>
+        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      </repository>
+    </repositories>
 
+     <!-- Maven build -->
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<sourceDirectory>src</sourceDirectory>
