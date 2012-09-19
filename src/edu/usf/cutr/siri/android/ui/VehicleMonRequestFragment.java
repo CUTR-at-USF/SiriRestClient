@@ -65,6 +65,18 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 	EditText directionRef;
 	EditText vehicleMonitoringDetailLevel;
 	EditText maximumNumberOfCallsOnwards;
+	
+	/**
+	 * String keys for each field so user-entered content can be saved and restored
+	 * between executions
+	 */
+	
+	String keyVehKey = "VehKey";
+	String keyVehOperatorRef = "VehOperatorRef";
+	String keyVehLineRef = "VehLineRef";
+	String keyVehDirectionRef = "VehDirectionRef";
+	String keyVehicleMonitoringDetailLevel = "VehicleMonitoringDetailLevel";
+	String keyVehMaximumNumberOfCallsOnwards = "VehMaximumNumberOfCallsOnwards";
 
 	// Used to format decimals to 3 places
 	DecimalFormat df = new DecimalFormat("#,###.###");
@@ -79,9 +91,6 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 	int jacksonObjectType;
 	int numRequests;
 
-	public VehicleMonRequestFragment() {
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,11 +102,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 		View v = inflater.inflate(R.layout.siri_vehicle_mon_request, container,
 				false);
 
-		// Try to get the developer key from a resource file, if it exists
-		String strKey = SiriUtils.getKeyFromResource(getActivity());
-
-		key = (EditText) v.findViewById(R.id.key);
-		key.setText(strKey);
+		key = (EditText) v.findViewById(R.id.key);		
 		operatorRef = (EditText) v.findViewById(R.id.operatorRef);
 		vehicleRef = (EditText) v.findViewById(R.id.vehicleRef);
 		lineRef = (EditText) v.findViewById(R.id.lineRef);
@@ -119,10 +124,40 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 				// to that tab
 			}
 		});
-
+			
+		//Set UI fields with saved user-entered text from last run
+//		if(savedInstanceState.getString(keyVehKey) != null){  //TODO - This line throws NPE, and it shouldn't.  Check it out later.  
+//			//Try to get last-used developer key
+//			key.setText(savedInstanceState.getString(keyVehKey));
+//		}else{
+//			// Try to get the developer key from a resource file, if it exists
+//			String strKey = SiriUtils.getKeyFromResource(getActivity());
+//			key.setText(strKey);
+//		}
+//		
+//		//if any values = null, then just fill the field with an empty string - null should only happen on first execution
+//		operatorRef.setText(savedInstanceState.getString(keyVehOperatorRef) != null ? savedInstanceState.getString(keyVehOperatorRef) : "");
+//		lineRef.setText(savedInstanceState.getString(keyVehLineRef) != null ? savedInstanceState.getString(keyVehLineRef) : "");
+//		directionRef.setText(savedInstanceState.getString(keyVehDirectionRef) != null ? savedInstanceState.getString(keyVehDirectionRef) : "");
+//		vehicleMonitoringDetailLevel.setText(savedInstanceState.getString(keyVehicleMonitoringDetailLevel) != null ? savedInstanceState.getString(keyVehicleMonitoringDetailLevel) : "");
+//		maximumNumberOfCallsOnwards.setText(savedInstanceState.getString(keyVehMaximumNumberOfCallsOnwards) != null ? savedInstanceState.getString(keyVehMaximumNumberOfCallsOnwards) : "");
+		
 		return v;
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		//Save user-entered UI fields for next execution
+		outState.putString(keyVehKey, key.getText().toString());
+		outState.putString(keyVehOperatorRef, operatorRef.getText().toString());
+		outState.putString(keyVehLineRef, lineRef.getText().toString());
+		outState.putString(keyVehDirectionRef, directionRef.getText().toString());		
+		outState.putString(keyVehicleMonitoringDetailLevel, vehicleMonitoringDetailLevel.getText().toString());		
+		outState.putString(keyVehMaximumNumberOfCallsOnwards, maximumNumberOfCallsOnwards.getText().toString());		
+				
+		super.onSaveInstanceState(outState);
+	}
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
