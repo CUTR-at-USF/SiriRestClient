@@ -66,6 +66,7 @@ public abstract class BaseRequestFragment extends SherlockFragment {
 	int httpConnectionType;
 	int jacksonObjectType;
 	int numRequests;
+	double timeBetweenRequests;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,9 @@ public abstract class BaseRequestFragment extends SherlockFragment {
 		// benchmarking
 		numRequests = Integer.parseInt(sharedPref.getString(
 				Preferences.KEY_NUM_REQUESTS, "1"));
+		// Get amount of time between consecutive requests, in seconds
+		timeBetweenRequests = Double.parseDouble(sharedPref
+				.getString(Preferences.KEY_TIME_BETWEEN_REQUESTS, "0"));
 	}
 
 	// ***************************************
@@ -177,7 +181,17 @@ public abstract class BaseRequestFragment extends SherlockFragment {
 					return s;
 				}
 
-				//
+				//If the user-specific amount of time between tests
+				//is greater than 0, and we still have tests left to execute, then wait
+				if(((numRequests - i) > 1) && timeBetweenRequests > 0 ){
+					Log.d(MainActivity.TAG, "Sleeping " + timeBetweenRequests + " second(s)...");
+					try {
+						Thread.sleep((long) (timeBetweenRequests * 1000));
+					} catch (InterruptedException e) {
+						Log.e(MainActivity.TAG, "Error sleeping in AsyncTask between requests: " + e);
+					}
+					
+				}
 			}
 
 			// Print out and display the results
