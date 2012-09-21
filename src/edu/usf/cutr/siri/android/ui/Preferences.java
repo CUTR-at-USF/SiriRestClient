@@ -32,11 +32,14 @@ public class Preferences extends SherlockPreferenceActivity implements
 
 	public static final String KEY_NUM_REQUESTS = "pref_key_num_requests";
 
+	public static final String KEY_TIME_BETWEEN_REQUESTS = "pref_key_time_between_requests";
+
 	ListPreference listResponseTypes;
 	ListPreference listJacksonJsonObjectTypes;
 	ListPreference listHttpConnectionType;
 	EditTextPreference txtNumRequests;
-	
+	EditTextPreference txtTimeBetweenRequests;
+
 	SharedPreferences sharedPreferences;
 
 	/**
@@ -53,46 +56,94 @@ public class Preferences extends SherlockPreferenceActivity implements
 		listResponseTypes = (ListPreference) findPreference(KEY_RESPONSE_TYPE);
 		listJacksonJsonObjectTypes = (ListPreference) findPreference(KEY_JACKSON_OBJECT_TYPE);
 		listHttpConnectionType = (ListPreference) findPreference(KEY_HTTP_CONNECTION_TYPE);
-		txtNumRequests = (EditTextPreference) findPreference(KEY_NUM_REQUESTS);		
-		
-		sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		
+		txtNumRequests = (EditTextPreference) findPreference(KEY_NUM_REQUESTS);
+		txtTimeBetweenRequests = (EditTextPreference) findPreference(KEY_TIME_BETWEEN_REQUESTS);
+
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
 		txtNumRequests.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
-		
-		//Verify number of requests entry
-		txtNumRequests.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean isInt = verifyInt(newValue);
-				
-				if(!isInt){
-					//Tell user that entry must be valid integer
-					Toast.makeText(
-							Preferences.this,
-							"Number of requests to execute must be an integer.",
-							Toast.LENGTH_SHORT).show();
-					Log.d(MainActivity.TAG,
-							"User tried to enter invalid value for numRequests.");
-					return false;
-				}else{
-					return true;
-				}
-			}
-		});
+
+		// Verify number of requests entry
+		txtNumRequests
+				.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+					@Override
+					public boolean onPreferenceChange(Preference preference,
+							Object newValue) {
+						boolean isInt = verifyInt(newValue);
+
+						if (!isInt) {
+							// Tell user that entry must be valid integer
+							Toast.makeText(
+									Preferences.this,
+									"Number of requests to execute must be an integer.",
+									Toast.LENGTH_SHORT).show();
+							Log.d(MainActivity.TAG,
+									"User tried to enter invalid value for numRequests.");
+							return false;
+						} else {
+							return true;
+						}
+					}
+				});
+
+		txtTimeBetweenRequests.getEditText().setInputType(
+				InputType.TYPE_CLASS_NUMBER
+						| InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+		// Verify number of requests entry
+		txtTimeBetweenRequests
+				.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+					@Override
+					public boolean onPreferenceChange(Preference preference,
+							Object newValue) {
+						boolean isDouble = verifyDouble(newValue);
+
+						if (!isDouble) {
+							// Tell user that entry must be valid integer
+							Toast.makeText(
+									Preferences.this,
+									"Amount of time between requests to execute must be a double.",
+									Toast.LENGTH_SHORT).show();
+							Log.d(MainActivity.TAG,
+									"User tried to enter invalid value for timeBetweenRequests.");
+							return false;
+						} else {
+							return true;
+						}
+					}
+				});
 	}
-	
+
 	/**
 	 * Verify that the numRequests entry is a valid integer
-	 * @param newValue entered value
+	 * 
+	 * @param newValue
+	 *            entered value
 	 * @return true if its a valid integer, false if its not
 	 */
-	private boolean verifyInt(Object newValue){
-		try{
+	private boolean verifyInt(Object newValue) {
+		try {
 			Integer.parseInt(newValue.toString());
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Verify that the numRequests entry is a valid double
+	 * 
+	 * @param newValue
+	 *            entered value
+	 * @return true if its a valid double, false if its not
+	 */
+	private boolean verifyDouble(Object newValue) {
+		try {
+			Double.parseDouble(newValue.toString());
+			return true;
+		} catch (Exception e) {
 			return false;
 		}
 	}
@@ -100,15 +151,16 @@ public class Preferences extends SherlockPreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		PreferenceManager.getDefaultSharedPreferences(this)
-				.registerOnSharedPreferenceChangeListener(this);		
-		
-		//Change the descriptions of the preferences based on user's selections
+				.registerOnSharedPreferenceChangeListener(this);
+
+		// Change the descriptions of the preferences based on user's selections
 		changePreferenceDescription(KEY_RESPONSE_TYPE);
 		changePreferenceDescription(KEY_JACKSON_OBJECT_TYPE);
 		changePreferenceDescription(KEY_HTTP_CONNECTION_TYPE);
 		changePreferenceDescription(KEY_NUM_REQUESTS);
+		changePreferenceDescription(KEY_TIME_BETWEEN_REQUESTS);
 	}
 
 	/**
@@ -120,59 +172,76 @@ public class Preferences extends SherlockPreferenceActivity implements
 	 */
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {	
-		Log.d(MainActivity.TAG, "Preference '" + key + "' changed, changing preference description...");
+			String key) {
+		Log.d(MainActivity.TAG, "Preference '" + key
+				+ "' changed, changing preference description...");
 		changePreferenceDescription(key);
 	}
-	
+
 	/**
 	 * Changes the preference descriptions based on the user's choice
-	 * @param key key value of the preference that changed
+	 * 
+	 * @param key
+	 *            key value of the preference that changed
 	 */
-	private void changePreferenceDescription(String key){
+	private void changePreferenceDescription(String key) {
 		if (key.equalsIgnoreCase(KEY_RESPONSE_TYPE)) {
-			toggleJSONObjectTypeSettingEnabled(Integer.valueOf(sharedPreferences.getString(key, "0")));
-			
+			toggleJSONObjectTypeSettingEnabled(Integer
+					.valueOf(sharedPreferences.getString(key, "0")));
+
 			if (Integer.valueOf(sharedPreferences.getString(key, "0")) == SiriRestClientConfig.RESPONSE_TYPE_XML) {
 				listResponseTypes.setSummary("XML response is selected.");
-			}else{
+			} else {
 				if (Integer.valueOf(sharedPreferences.getString(key, "0")) == SiriRestClientConfig.RESPONSE_TYPE_JSON) {
 					listResponseTypes.setSummary("JSON response is selected.");
 				}
 			}
 		}
-		
-		if (key.equalsIgnoreCase(KEY_JACKSON_OBJECT_TYPE)) {						
+
+		if (key.equalsIgnoreCase(KEY_JACKSON_OBJECT_TYPE)) {
 			if (Integer.valueOf(sharedPreferences.getString(key, "0")) == SiriRestClientConfig.JACKSON_OBJECT_TYPE_MAPPER) {
-				listJacksonJsonObjectTypes.setSummary("ObjectMapper is selected.");
-			}else{
+				listJacksonJsonObjectTypes
+						.setSummary("ObjectMapper is selected.");
+			} else {
 				if (Integer.valueOf(sharedPreferences.getString(key, "0")) == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER) {
-					listJacksonJsonObjectTypes.setSummary("ObjectReader is selected.");
+					listJacksonJsonObjectTypes
+							.setSummary("ObjectReader is selected.");
 				}
 			}
 		}
-		
-		if (key.equalsIgnoreCase(KEY_HTTP_CONNECTION_TYPE)) {						
+
+		if (key.equalsIgnoreCase(KEY_HTTP_CONNECTION_TYPE)) {
 			if (Integer.valueOf(sharedPreferences.getString(key, "0")) == SiriRestClientConfig.HTTP_CONNECTION_TYPE_ANDROID) {
-				listHttpConnectionType.setSummary("Android HttpURLConnection is selected.");
-			}else{
+				listHttpConnectionType
+						.setSummary("Android HttpURLConnection is selected.");
+			} else {
 				if (Integer.valueOf(sharedPreferences.getString(key, "0")) == SiriRestClientConfig.HTTP_CONNECTION_TYPE_JACKSON) {
-					listHttpConnectionType.setSummary("Jackson internal connection is selected.");
+					listHttpConnectionType
+							.setSummary("Jackson internal connection is selected.");
 				}
 			}
 		}
-		
-		if (key.equalsIgnoreCase(KEY_NUM_REQUESTS)) {						
-			txtNumRequests.setSummary(Integer.valueOf(sharedPreferences.getString(key, "1")) + " requests will be executed consecutively");			
+
+		if (key.equalsIgnoreCase(KEY_NUM_REQUESTS)) {
+			txtNumRequests.setSummary(Integer.valueOf(sharedPreferences
+					.getString(key, "1"))
+					+ " requests will be executed consecutively");
+		}
+
+		if (key.equalsIgnoreCase(KEY_TIME_BETWEEN_REQUESTS)) {
+			txtTimeBetweenRequests.setSummary(Double.valueOf(sharedPreferences
+					.getString(key, "0"))
+					+ " seconds will elapse between requests");
 		}
 	}
-	
+
 	/**
 	 * If the user selects XML response type, we disable the Jackson JSON object
 	 * type option. If the user selects JSON, then we re-enable the Jackson JSON
 	 * object type option.
 	 * 
-	 * @param val currently selected server response type
+	 * @param val
+	 *            currently selected server response type
 	 */
 	private void toggleJSONObjectTypeSettingEnabled(int val) {
 		if (val == SiriRestClientConfig.RESPONSE_TYPE_XML) {
