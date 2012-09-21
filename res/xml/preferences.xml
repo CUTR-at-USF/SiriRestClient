@@ -11,6 +11,14 @@
             android:entries="@array/pref_response_type_entries"
             android:entryValues="@array/pref_response_type_values"
             android:defaultValue="0" />
+        <ListPreference
+            android:key="pref_key_http_connection"
+            android:title="@string/pref_http_connection_title"
+            android:summary="@string/pref_http_connection_summary"
+            android:dialogTitle="@string/pref_http_connection_dialog_title"
+            android:entries="@array/pref_http_connection_entries"
+            android:entryValues="@array/pref_http_connection_values"
+            android:defaultValue="0" />
     </PreferenceCategory>    
     <PreferenceCategory
         android:title="@string/pref_category_json_parsing_title"
@@ -24,18 +32,7 @@
             android:entryValues="@array/pref_jackson_object_values"
             android:defaultValue="0" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_category_http_title"
-        android:key="pref_key_http_category">
-        <ListPreference
-            android:key="pref_key_http_connection"
-            android:title="@string/pref_http_connection_title"
-            android:summary="@string/pref_http_connection_summary"
-            android:dialogTitle="@string/pref_http_connection_dialog_title"
-            android:entries="@array/pref_http_connection_entries"
-            android:entryValues="@array/pref_http_connection_values"
-            android:defaultValue="0" />
-    </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/pref_category_tests_title"
         android:key="pref_key_tests_category">
@@ -45,5 +42,12 @@
             android:summary="@string/pref_num_requests_summary"
             android:dialogTitle="@string/pref_num_requests_dialog_title"            
             android:defaultValue="1" />
+        
+        <EditTextPreference
+            android:key="pref_key_time_between_requests"
+            android:title="@string/pref_time_between_requests_title"
+            android:summary="@string/pref_time_between_requests_summary"
+            android:dialogTitle="@string/pref_time_between_requests_dialog_title"            
+            android:defaultValue="0" />
     </PreferenceCategory>
 </PreferenceScreen>

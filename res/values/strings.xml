@@ -48,25 +48,24 @@
     <string name="pref_Title">Settings</string>
     
     <!-- Response Type (XML or JSON) -->
-    <string name="pref_category_response_type_title">Response Type</string>
+    <string name="pref_category_response_type_title">HTTP Options</string>
     <string name="pref_response_type_title">Server Response Type</string>
     <string name="pref_response_type_summary">Select JSON or XML format for the data to be returned by the server</string>
     <string name="pref_response_type_dialog_title">Response Type</string>
     <string name="pref_response_type_default_value">0</string>
     
-    <!-- Jackson JSON parsing -->
-    <string name="pref_category_json_parsing_title">JSON Parsing</string>
-    <string name="pref_jackson_object_title">Jackson JSON Parser Type</string>
-    <string name="pref_jackson_object_summary">Select the ObjectMapper or ObjectReader to perform JSON parsing</string>
-    <string name="pref_jackson_object_dialog_title">Jackson JSON Parser Type</string>
-    <string name="pref_jackson_object_default_value">0</string>
-       
-    <!-- HTTP Connection -->
-    <string name="pref_category_http_title">HTTP Connection</string>
-    <string name="pref_http_connection_title">Connection Type</string>
+    <!-- HTTP Connection -->    
+    <string name="pref_http_connection_title">HTTP Connection Type</string>
     <string name="pref_http_connection_summary">Select the internal Jackson or native Android HTTP connection</string>
     <string name="pref_http_connection_dialog_title">HTTP Connection Type</string>
     <string name="pref_http_connection_default_value">0</string>
+    
+    <!-- Jackson JSON parsing -->
+    <string name="pref_category_json_parsing_title">Jackson Options</string>
+    <string name="pref_jackson_object_title">JSON Parser Type</string>
+    <string name="pref_jackson_object_summary">Select the ObjectMapper or ObjectReader to perform JSON parsing</string>
+    <string name="pref_jackson_object_dialog_title">Jackson JSON Parser Type</string>
+    <string name="pref_jackson_object_default_value">0</string>
     
     <!-- Number of test requests to run consecutively -->
     <string name="pref_category_tests_title">Test Parameters</string>
@@ -74,5 +73,11 @@
     <string name="pref_num_requests_summary">Sets the number of consecutive requests to execute when the Submit button is tapped (for time benchmarking).</string>
     <string name="pref_num_requests_dialog_title">Set Number of Requests</string>
     <string name="pref_num_requests_default_value">1</string>
+    
+    <!-- Amount of time to allow between requests, in seconds -->    
+    <string name="pref_time_between_requests_title">Time Between Requests (sec)</string>
+    <string name="pref_time_between_requests_summary">Sets the amount of time in seconds between consecutive tests (for time benchmarking).</string>
+    <string name="pref_time_between_requests_dialog_title">Set Time Between Requests (seconds)</string>
+    <string name="pref_time_between_requests_default_value">0</string>
     
 </resources>
