@@ -128,7 +128,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 		//Set UI fields with saved user-entered text from last run
 //		if(savedInstanceState.getString(keyVehKey) != null){  //TODO - This line throws NPE, and it shouldn't.  Check it out later.  
 			//Try to get last-used developer key
-			key.setText(savedInstanceState.getString(keyVehKey));
+			//key.setText(savedInstanceState.getString(keyVehKey));
 //		}else{
 			// Try to get the developer key from a resource file, if it exists
 			String strKey = SiriUtils.getKeyFromResource(getActivity());
