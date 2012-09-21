@@ -14,69 +14,45 @@
  * limitations under the License.
  */
 
-package edu.usf.cutr.siri.android.ui;
+package edu.usf.cutr.siri.android.ui.fragments;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import uk.org.siri.siri.Siri;
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-import edu.usf.cutr.siri.android.client.SiriRestClientConfig;
 import edu.usf.cutr.siri.android.client.SiriRestClient;
-
+import edu.usf.cutr.siri.android.client.SiriRestClientConfig;
+import edu.usf.cutr.siri.android.ui.MainActivity;
+import edu.usf.cutr.siri.android.ui.Preferences;
 import edu.usf.cutr.siri.android.util.SiriUtils;
 
 /**
- * The UI for the input fields for the SIRI Vehicle Monitoring Request, which
- * triggers the HTTP request for Vehicle Monitoring Request JSON or XML data.
+ * This class defines the basic implementation that's shared by both the
+ * StopMonRequestFragment and VehicelMonRequestFragment for the user interface
+ * progress bar, test logic, and logic for sending a request to the server, and
+ * leaves some methods abstract for those sub-classes to fill in the
+ * implementation relevant to each request type.
  * 
- * @author Sean Barbeau
+ * @author Sean J. Barbeau
  * 
  */
-public class VehicleMonRequestFragment extends SherlockFragment {
+public abstract class BaseRequestFragment extends SherlockFragment {
+	protected ProgressDialog progressDialog;
 
-	private ProgressDialog progressDialog;
-
-	private boolean destroyed = false;
-
-	/**
-	 * EditText fields to hold values typed in by user
-	 */
-	EditText key;
-	EditText operatorRef;
-	EditText vehicleRef;
-	EditText lineRef;
-	EditText directionRef;
-	EditText vehicleMonitoringDetailLevel;
-	EditText maximumNumberOfCallsOnwards;
-	
-	/**
-	 * String keys for each field so user-entered content can be saved and restored
-	 * between executions
-	 */
-	
-	String keyVehKey = "VehKey";
-	String keyVehOperatorRef = "VehOperatorRef";
-	String keyVehLineRef = "VehLineRef";
-	String keyVehDirectionRef = "VehDirectionRef";
-	String keyVehicleMonitoringDetailLevel = "VehicleMonitoringDetailLevel";
-	String keyVehMaximumNumberOfCallsOnwards = "VehMaximumNumberOfCallsOnwards";
+	protected boolean destroyed = false;
 
 	// Used to format decimals to 3 places
 	DecimalFormat df = new DecimalFormat("#,###.###");
@@ -97,68 +73,6 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.siri_vehicle_mon_request, container,
-				false);
-
-		key = (EditText) v.findViewById(R.id.key);		
-		operatorRef = (EditText) v.findViewById(R.id.operatorRef);
-		vehicleRef = (EditText) v.findViewById(R.id.vehicleRef);
-		lineRef = (EditText) v.findViewById(R.id.lineRef);
-		directionRef = (EditText) v.findViewById(R.id.directionRef);
-		vehicleMonitoringDetailLevel = (EditText) v
-				.findViewById(R.id.vehicleMonDetailLevel);
-		maximumNumberOfCallsOnwards = (EditText) v
-				.findViewById(R.id.maxNumOfCallsOnwards);
-
-		final Button button = (Button) v.findViewById(R.id.submit);
-
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-
-				// Start Async task to make REST request
-				new DownloadVehicleInfoTask().execute();
-
-				// TODO Get response back and show in another tab, then switch
-				// to that tab
-			}
-		});
-			
-		//Set UI fields with saved user-entered text from last run
-//		if(savedInstanceState.getString(keyVehKey) != null){  //TODO - This line throws NPE, and it shouldn't.  Check it out later.  
-			//Try to get last-used developer key
-			//key.setText(savedInstanceState.getString(keyVehKey));
-//		}else{
-			// Try to get the developer key from a resource file, if it exists
-			String strKey = SiriUtils.getKeyFromResource(getActivity());
-			key.setText(strKey);
-//		}
-//		
-//		//if any values = null, then just fill the field with an empty string - null should only happen on first execution
-//		operatorRef.setText(savedInstanceState.getString(keyVehOperatorRef) != null ? savedInstanceState.getString(keyVehOperatorRef) : "");
-//		lineRef.setText(savedInstanceState.getString(keyVehLineRef) != null ? savedInstanceState.getString(keyVehLineRef) : "");
-//		directionRef.setText(savedInstanceState.getString(keyVehDirectionRef) != null ? savedInstanceState.getString(keyVehDirectionRef) : "");
-//		vehicleMonitoringDetailLevel.setText(savedInstanceState.getString(keyVehicleMonitoringDetailLevel) != null ? savedInstanceState.getString(keyVehicleMonitoringDetailLevel) : "");
-//		maximumNumberOfCallsOnwards.setText(savedInstanceState.getString(keyVehMaximumNumberOfCallsOnwards) != null ? savedInstanceState.getString(keyVehMaximumNumberOfCallsOnwards) : "");
-		
-		return v;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		//Save user-entered UI fields for next execution
-		outState.putString(keyVehKey, key.getText().toString());
-		outState.putString(keyVehOperatorRef, operatorRef.getText().toString());
-		outState.putString(keyVehLineRef, lineRef.getText().toString());
-		outState.putString(keyVehDirectionRef, directionRef.getText().toString());		
-		outState.putString(keyVehicleMonitoringDetailLevel, vehicleMonitoringDetailLevel.getText().toString());		
-		outState.putString(keyVehMaximumNumberOfCallsOnwards, maximumNumberOfCallsOnwards.getText().toString());		
-				
-		super.onSaveInstanceState(outState);
-	}
-	
-	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		destroyed = true;
@@ -167,7 +81,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 	// ***************************************
 	// Private methods
 	// ***************************************
-	private void refreshStates(Siri states) {
+	protected void refreshStates(Siri states) {
 		if (states == null) {
 			return;
 		}
@@ -179,7 +93,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 	/**
 	 * Get user preferences for connection and parsing types
 	 */
-	private void getUserPreferences() {
+	protected void getUserPreferences() {
 		SharedPreferences sharedPref = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		responseType = Integer.parseInt(sharedPref.getString(
@@ -195,10 +109,16 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 	}
 
 	// ***************************************
-	// Private classes
+	// Protected classes
 	// ***************************************
-	private class DownloadVehicleInfoTask extends
+	protected abstract class BaseDownloadInfoTask extends
 			AsyncTask<Void, Integer, Siri> {
+
+		/**
+		 * Client object that makes request to the server
+		 */
+		protected SiriRestClient client;
+
 		@Override
 		protected void onPreExecute() {
 			// before the network request begins, show a progress indicator
@@ -209,40 +129,17 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 		protected Siri doInBackground(Void... params) {
 			// Sample vehicle request:
 			// http://bustime.mta.info/api/siri/vehicle-monitoring.json?OperatorRef=MTA%20NYCT&DirectionRef=0&LineRef=MTA%20NYCT_S40
-			Siri s = null;
-
 			getUserPreferences();
+
+			Siri s = null;
 
 			// Setup server config
 			SiriRestClientConfig config = new SiriRestClientConfig(responseType);
 			config.setHttpConnectionType(httpConnectionType);
 			config.setJacksonObjectType(jacksonObjectType);
 
-			// Get integer values from TextBoxes
-			int directionRefInt = -1, maximumNumberOfCallsOnwardsInt = -1;
-			try {
-				directionRefInt = Integer.parseInt(directionRef.getText()
-						.toString());
-			} catch (NumberFormatException e) {
-				if (directionRef.getText().toString().length() != 0) {
-					Log.w(MainActivity.TAG,
-							"Invalid value entered for DirectionRef: " + e);
-				}
-			}
-			try {
-				maximumNumberOfCallsOnwardsInt = Integer
-						.parseInt(maximumNumberOfCallsOnwards.getText()
-								.toString());
-			} catch (NumberFormatException e) {
-				if (maximumNumberOfCallsOnwards.getText().toString().length() != 0) {
-					Log.w(MainActivity.TAG,
-							"Invalid value entered for MaximumNumberOfCallsOnwardsInt: "
-									+ e);
-				}
-			}
-
 			// Instantiate client with URLs for server and config
-			SiriRestClient client = new SiriRestClient(
+			client = new SiriRestClient(
 					"http://bustime.mta.info/api/siri/vehicle-monitoring",
 					"http://bustime.mta.info/api/siri/stop-monitoring", config);
 
@@ -253,12 +150,8 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 
 			// Loop for numRequest times
 			for (int i = 0; i < numRequests; i++) {
-				// Make request to server
-				s = client.makeVehicleMonRequest(key.getText().toString(),
-						operatorRef.getText().toString(), vehicleRef.getText()
-								.toString(), lineRef.getText().toString(),
-						directionRefInt, vehicleMonitoringDetailLevel.getText()
-								.toString(), maximumNumberOfCallsOnwardsInt);
+				// Make request to server via subclass and get Siri response
+				s = makeRequest(client);
 
 				// Get benchmark of how long the request took
 				final long elapsedTimeNanoSeconds = client.getLastRequestTime();
@@ -276,22 +169,35 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 				if (numRequests > 1) {
 					publishProgress((int) ((i / (float) numRequests) * 100));
 				}
-				
-				if(isCancelled()){
-					//User aborted the task, so we need to cleanly stop this task
-					Log.d(MainActivity.TAG,
-							"User canceled the task.");
+
+				if (isCancelled()) {
+					// User aborted the task, so we need to cleanly stop this
+					// task
+					Log.d(MainActivity.TAG, "User canceled the task.");
 					return s;
 				}
+
+				//
 			}
 
-			//Print out and display the results
-			showResults();			
+			// Print out and display the results
+			showResults();
 
-			//Return most recent Siri object
+			// Return most recent Siri object
 			return s;
 		}
-		
+
+		/**
+		 * Left to the implementing sub-class to make the exact query to the
+		 * server and return a Siri object
+		 * 
+		 * @param client
+		 *            SiriRestClient object that should be used to make the
+		 *            request
+		 * @return Siri object containing real-time transit information
+		 */
+		protected abstract Siri makeRequest(SiriRestClient client);
+
 		@Override
 		protected void onPostExecute(Siri result) {
 			// hide the progress indicator when the network request is complete
@@ -300,7 +206,7 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			// return the list of vehicle info
 			refreshStates(result);
 		}
-					
+
 		@Override
 		protected void onProgressUpdate(Integer... progress) {
 			// Update the progress UI with a percent complete when running
@@ -324,13 +230,13 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			// Show progress as tests are completed
 			progressDialog.setIndeterminate(true);
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			//Allow the user to cancel the request, and clean up afterwords
+			// Allow the user to cancel the request, and clean up afterwords
 			progressDialog.setOnCancelListener(new OnCancelListener() {
-	            public void onCancel(DialogInterface arg0) {
-	                 dismissProgressDialog();	                 
-	                 cancel(true);
-	            }
-	        });
+				public void onCancel(DialogInterface arg0) {
+					dismissProgressDialog();
+					cancel(true);
+				}
+			});
 
 			// Show an indeterminate spinner in the Activity title bar,
 			// to tell the user something is going on during the initial
@@ -354,15 +260,15 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 
 		public void dismissProgressDialog() {
 			if (progressDialog != null && !destroyed) {
-				progressDialog.dismiss();				
+				progressDialog.dismiss();
 			}
-			
+
 			// Shut down the indeterminate progress indicator on the Activity
 			// Action Bar
 			getActivity().setProgressBarIndeterminateVisibility(Boolean.FALSE);
 		}
-		
-		public void showResults(){
+
+		public void showResults() {
 			if (numRequests == 1) {
 				// If there was only one test, then show a Toast of the single
 				// result
@@ -413,4 +319,5 @@ public class VehicleMonRequestFragment extends SherlockFragment {
 			Log.d(MainActivity.TAG, elapsedTimes.toString());
 		}
 	}
+
 }

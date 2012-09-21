@@ -27,6 +27,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import edu.usf.cutr.siri.android.ui.StopMonResponseLoader.AppListFragment;
+import edu.usf.cutr.siri.android.ui.fragments.StopMonRequestFragment;
+import edu.usf.cutr.siri.android.ui.fragments.VehicleMonRequestFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -136,6 +138,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
