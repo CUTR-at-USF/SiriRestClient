@@ -80,4 +80,9 @@
     <string name="pref_time_between_requests_dialog_title">Set Time Between Requests (seconds)</string>
     <string name="pref_time_between_requests_default_value">0</string>
     
+    <!-- Beep when the app has finished running the test -->    
+    <string name="pref_beep_on_test_complete_title">Beep On Test Complete</string>
+    <string name="pref_beep_on_test_complete_summary">If set to true, the app will beep when its finished calculating results of tests.</string>    
+    <string name="pref_beep_on_test_complete_default_value">0</string>
+    
 </resources>

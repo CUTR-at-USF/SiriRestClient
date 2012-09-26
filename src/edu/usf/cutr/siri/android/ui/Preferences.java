@@ -3,6 +3,7 @@ package edu.usf.cutr.siri.android.ui;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -33,12 +34,15 @@ public class Preferences extends SherlockPreferenceActivity implements
 	public static final String KEY_NUM_REQUESTS = "pref_key_num_requests";
 
 	public static final String KEY_TIME_BETWEEN_REQUESTS = "pref_key_time_between_requests";
+	
+	public static final String KEY_BEEP_ON_TEST_COMPLETE = "pref_key_beep_on_test_complete";
 
 	ListPreference listResponseTypes;
 	ListPreference listJacksonJsonObjectTypes;
 	ListPreference listHttpConnectionType;
 	EditTextPreference txtNumRequests;
 	EditTextPreference txtTimeBetweenRequests;
+	CheckBoxPreference chkbxBeepOnTestComplete;
 
 	SharedPreferences sharedPreferences;
 
@@ -58,6 +62,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 		listHttpConnectionType = (ListPreference) findPreference(KEY_HTTP_CONNECTION_TYPE);
 		txtNumRequests = (EditTextPreference) findPreference(KEY_NUM_REQUESTS);
 		txtTimeBetweenRequests = (EditTextPreference) findPreference(KEY_TIME_BETWEEN_REQUESTS);
+		chkbxBeepOnTestComplete = (CheckBoxPreference) findPreference(KEY_BEEP_ON_TEST_COMPLETE);
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -161,6 +166,7 @@ public class Preferences extends SherlockPreferenceActivity implements
 		changePreferenceDescription(KEY_HTTP_CONNECTION_TYPE);
 		changePreferenceDescription(KEY_NUM_REQUESTS);
 		changePreferenceDescription(KEY_TIME_BETWEEN_REQUESTS);
+		changePreferenceDescription(KEY_BEEP_ON_TEST_COMPLETE);
 	}
 
 	/**
@@ -232,6 +238,14 @@ public class Preferences extends SherlockPreferenceActivity implements
 			txtTimeBetweenRequests.setSummary(Double.valueOf(sharedPreferences
 					.getString(key, "0"))
 					+ " seconds will elapse between requests");
+		}
+		
+		if (key.equalsIgnoreCase(KEY_BEEP_ON_TEST_COMPLETE)) {
+			if(sharedPreferences.getBoolean(key, false)){					
+				chkbxBeepOnTestComplete.setSummary("Will beep when tests are complete");
+			}else{
+				chkbxBeepOnTestComplete.setSummary("No beep when tests are complete");
+			}
 		}
 	}
 

@@ -49,5 +49,11 @@
             android:summary="@string/pref_time_between_requests_summary"
             android:dialogTitle="@string/pref_time_between_requests_dialog_title"            
             android:defaultValue="0" />
+        
+        <CheckBoxPreference
+            android:key="pref_key_beep_on_test_complete"
+            android:title="@string/pref_beep_on_test_complete_title"
+            android:summary="@string/pref_beep_on_test_complete_summary"                        
+            />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -16,15 +16,22 @@
 
 package edu.usf.cutr.siri.android.ui.fragments;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import uk.org.siri.siri.Siri;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -67,6 +74,7 @@ public abstract class BaseRequestFragment extends SherlockFragment {
 	int jacksonObjectType;
 	int numRequests;
 	double timeBetweenRequests;
+	boolean beepOnTestComplete;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,6 +118,9 @@ public abstract class BaseRequestFragment extends SherlockFragment {
 		// Get amount of time between consecutive requests, in seconds
 		timeBetweenRequests = Double.parseDouble(sharedPref
 				.getString(Preferences.KEY_TIME_BETWEEN_REQUESTS, "0"));
+		//Get whether or not to beep when tests are complete
+		beepOnTestComplete = sharedPref
+				.getBoolean(Preferences.KEY_BEEP_ON_TEST_COMPLETE, false);
 	}
 
 	// ***************************************
@@ -196,6 +207,15 @@ public abstract class BaseRequestFragment extends SherlockFragment {
 
 			// Print out and display the results
 			showResults();
+			
+			//Beep on test completion, if the preference is set
+			if(beepOnTestComplete){
+				try {
+					playSound(getActivity());
+				} catch (Exception e) {
+					Log.w(MainActivity.TAG, "Error trying to beep on test completion: " + e);					
+				}
+			}
 
 			// Return most recent Siri object
 			return s;
@@ -332,6 +352,16 @@ public abstract class BaseRequestFragment extends SherlockFragment {
 					"Elapsed times test results in milliseconds:");
 			Log.d(MainActivity.TAG, elapsedTimes.toString());
 		}
+	}
+	
+	/**
+	 * Make a beep to indicate the test is done
+	 * 
+	 * @param context	
+	 */
+	public void playSound(Context context) throws Exception {
+		final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+	    tg.startTone(ToneGenerator.TONE_PROP_PROMPT);
 	}
 
 }
