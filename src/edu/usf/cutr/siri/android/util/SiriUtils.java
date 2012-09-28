@@ -16,16 +16,13 @@
 
 package edu.usf.cutr.siri.android.util;
 
+import static edu.usf.cutr.siri.android.client.SiriRestClient.TAG;
+
 /**
  * Java imports
  */
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 
-import static edu.usf.cutr.siri.android.client.SiriRestClient.TAG;
+import java.util.List;
 
 /**
  * Siri POJO imports
@@ -44,9 +41,8 @@ import uk.org.siri.siri.VehicleMonitoringDelivery;
 /**
  * Android imports
  */
-import android.content.Context;
-import android.content.res.Resources.NotFoundException;
 import android.util.Log;
+
 
 /**
  * This class holds utility methods for the library
