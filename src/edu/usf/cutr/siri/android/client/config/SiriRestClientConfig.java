@@ -1,4 +1,4 @@
-package edu.usf.cutr.siri.android.client;
+package edu.usf.cutr.siri.android.client.config;
 
 /**
  * Container class for general configuration options for the SiriRestClient

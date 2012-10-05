@@ -7,7 +7,8 @@ import java.net.URL;
 import android.os.Build;
 import android.util.Log;
 import uk.org.siri.siri.Siri;
-import edu.usf.cutr.siri.android.util.SiriJacksonConfig;
+import edu.usf.cutr.siri.android.client.config.SiriJacksonConfig;
+import edu.usf.cutr.siri.android.client.config.SiriRestClientConfig;
 
 /**
  * This class is used to make a request to a RESTful SIRI API server, parse the
