@@ -28,9 +28,9 @@
     
         <!-- SIRI POJOs -->
         <dependency>
-            <artifactId>onebusaway-siri-api-v13-pojos</artifactId>
-            <version>1.0.0</version>
+            <artifactId>onebusaway-siri-api-v13-pojos</artifactId>            
             <groupId>edu.usf.cutr.siri</groupId>
+            <version>1.0.0</version>
         </dependency>
         
         <!-- Using Jackson for JSON parsing -->
