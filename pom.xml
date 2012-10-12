@@ -5,7 +5,23 @@
     <artifactId>sirirestclient</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    
     <name>SiriRestClient</name>    
+    <description>A reference implementation Android library for interacting with a RESTful SIRI interface for real-time transit data, such as that currently deployed by MTA BusTime API</description>
+    <url>https://github.com/CUTR-at-USF/SiriRestClient/wiki</url>
+  
+    <issueManagement>
+      <system>GitHub</system>
+      <url>https://github.com/CUTR-at-USF/SiriRestClient/issues</url>
+    </issueManagement>
+  
+    <licenses>
+      <license>
+        <name>The Apache Software License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>    
     
     <properties>
 		<android-platform>15</android-platform>
@@ -79,17 +95,29 @@
             <artifactId>aalto-xml-android</artifactId>
             <version>0.9.8</version>
         </dependency>        
-	</dependencies>
+	</dependencies>    
     
-    <!-- For Jackson SNAPSHOTs -->
     <repositories>
+      <!-- For Jackson SNAPSHOTs -->
       <repository>
         <id>sonatype-nexus-snapshots</id>
         <url>http://oss.sonatype.org/content/repositories/snapshots</url>
       </repository>
+      
+      <!-- CUTR Android XML libraries SNAPSHOTs -->
+      <repository>
+        <id>cutr-snapshots</id>
+        <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/snapshots</url>
+      </repository>
+    
+      <!-- CUTR Android XML libraries Releases -->
+      <repository>
+        <id>cutr-releases</id>
+        <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases</url>
+      </repository>      
     </repositories>
-
-     <!-- Maven build -->
+    
+    <!-- Maven build -->
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<sourceDirectory>src</sourceDirectory>
@@ -155,5 +183,17 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+  
+  <distributionManagement>
+  <repository>
+    <id>repo</id>
+    <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases</url>
+  </repository>
+  <snapshotRepository>
+    <id>snapshot-repo</id>
+    <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/snapshots</url>
+  </snapshotRepository>
+</distributionManagement>
+  
 	
 </project>
