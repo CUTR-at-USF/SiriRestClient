@@ -185,15 +185,13 @@
 	</build>
   
   <distributionManagement>
-  <repository>
-    <id>repo</id>
-    <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases</url>
-  </repository>
-  <snapshotRepository>
-    <id>snapshot-repo</id>
-    <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/snapshots</url>
-  </snapshotRepository>
-</distributionManagement>
-  
-	
+    <repository>
+      <id>repo</id>
+      <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshot-repo</id>
+      <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
