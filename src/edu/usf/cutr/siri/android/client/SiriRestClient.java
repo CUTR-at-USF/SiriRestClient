@@ -1,9 +1,16 @@
 package edu.usf.cutr.siri.android.client;
 
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import uk.org.siri.siri.Siri;
@@ -31,14 +38,15 @@ public class SiriRestClient {
 	String stopMonBaseUrl;
 	
 	//Used to time response and parsing
-	long startTime = 0;
-	long endTime = 0;
-
+	long requestStartTime = 0;
+	long requestEndTime = 0;
+	
 	/**
 	 * Creates a new SiriRestClient object that can make vehicle monitoring and
 	 * stop monitoring REST requests, parse responses, and return an
 	 * instantiated Siri object
 	 * 
+	 * @param context Context that is using this SiriRestClient object
 	 * @param vehMonBaseUrl
 	 *            the entire URL up to the file extension for vehicle monitoring
 	 *            (e.g., http://bustime.mta.info/api/siri/vehicle-monitoring),
@@ -51,7 +59,7 @@ public class SiriRestClient {
 	 *            configuration for requests to be made to the server
 	 */
 	public SiriRestClient(String vehMonBaseUrl, String stopMonBaseUrl,
-			SiriRestClientConfig config) {
+			SiriRestClientConfig config) {		
 		this.vehMonBaseUrl = vehMonBaseUrl;
 		this.stopMonBaseUrl = stopMonBaseUrl;
 		this.config = config;
@@ -82,9 +90,9 @@ public class SiriRestClient {
 	 * @return a benchmark of the amount of time the last request/response/parsing took (in nanoseconds)
 	 */
 	public long getLastRequestTime(){
-		return endTime - startTime;
+		return requestEndTime - requestStartTime;
 	}
-
+		
 	/**
 	 * Makes the HTTP request to the SIRI VehicleMonitoring REST API on the
 	 * server, parses the response, and returns a Siri object containing the
@@ -453,10 +461,10 @@ public class SiriRestClient {
 						 */
 						Log.d(TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectReader Jackson parser, Jackson HTTP Connection");
-						startTime= System.nanoTime();
+						requestStartTime= System.nanoTime();
 						s = SiriJacksonConfig.getObjectReaderInstance()
 								.readValue(url);
-						endTime= System.nanoTime();
+						requestEndTime= System.nanoTime();
 					} else {
 						/* Use ObjectMapper, read from URL directly
 						 * ObjectReader should be more efficient than the ObjectMapper.  
@@ -464,10 +472,10 @@ public class SiriRestClient {
 						 */
 						Log.v(TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectMapper Jackson parser, Jackson HTTP Connection");
-						startTime= System.nanoTime();
+						requestStartTime= System.nanoTime();
 						s = SiriJacksonConfig.getObjectMapperInstance()
 								.readValue(url, Siri.class);
-						endTime= System.nanoTime();
+						requestEndTime= System.nanoTime();
 					}
 				} else {
 					/**
@@ -482,13 +490,13 @@ public class SiriRestClient {
 						 */
 						Log.v(TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectReader Jackson parser, Android HttpURLConnection");
-						startTime= System.nanoTime();
+						requestStartTime= System.nanoTime();
 						// Use Android HttpURLConnection - this should be more efficient than internal JSON HTTP connection
 						urlConnection = (HttpURLConnection) url.openConnection();
 						
 						s = SiriJacksonConfig.getObjectReaderInstance()
 								.readValue(urlConnection.getInputStream());
-						endTime= System.nanoTime();
+						requestEndTime= System.nanoTime();
 					} else {
 						/* Use ObjectMapper with Android HttpURLConnection
 						 * 
@@ -498,13 +506,13 @@ public class SiriRestClient {
 						 */
 						Log.v(TAG,
 								"Using "+ getResponseTypeFileExtension().toUpperCase() + ", ObjectMapper Jackson parser, Android HttpURLConnection");
-						startTime= System.nanoTime();
+						requestStartTime= System.nanoTime();
 						// Use Android HttpURLConnection - this should be more efficient than internal JSON HTTP connection
 						urlConnection = (HttpURLConnection) url.openConnection();
 						s = SiriJacksonConfig.getObjectMapperInstance()
 								.readValue(urlConnection.getInputStream(),
 										Siri.class);
-						endTime= System.nanoTime();
+						requestEndTime= System.nanoTime();
 					}
 				}
 
@@ -522,10 +530,10 @@ public class SiriRestClient {
 							"Using "+ getResponseTypeFileExtension().toUpperCase() + ", Jackson HTTP Connection");
 					
 					// Parse the SIRI XML response					
-					startTime= System.nanoTime();
+					requestStartTime= System.nanoTime();
 					s = SiriJacksonConfig.getXmlMapperInstance().readValue(url,
 							Siri.class);
-					endTime= System.nanoTime();
+					requestEndTime= System.nanoTime();
 
 				} else {
 					/*
@@ -534,14 +542,14 @@ public class SiriRestClient {
 					 */
 					Log.v(TAG,
 							"Using "+ getResponseTypeFileExtension().toUpperCase() + ", Android HttpURLConnection");
-					startTime= System.nanoTime();
+					requestStartTime= System.nanoTime();
 					// Use Android HttpURLConnection
 					urlConnection = (HttpURLConnection) url.openConnection();
 
 					// Parse the SIRI XML response					
 					s = SiriJacksonConfig.getXmlMapperInstance().readValue(
 							urlConnection.getInputStream(), Siri.class);
-					endTime= System.nanoTime();
+					requestEndTime= System.nanoTime();
 				}
 
 				break;
@@ -551,8 +559,8 @@ public class SiriRestClient {
 			Log.e(TAG, "Error fetching JSON or XML: " + e);
 			e.printStackTrace();
 			//Reset timestamps to show there was an error
-			startTime = 0;
-			endTime = 0;
+			requestStartTime = 0;
+			requestEndTime = 0;
 		} finally {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
@@ -570,4 +578,6 @@ public class SiriRestClient {
 			System.setProperty("http.keepAlive", "false");
 		}
 	}
+	
+	
 }
