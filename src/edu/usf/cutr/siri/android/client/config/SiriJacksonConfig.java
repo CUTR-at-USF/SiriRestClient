@@ -492,7 +492,7 @@ public class SiriJacksonConfig {
 						+ " from cache in " + df.format(getLastCacheReadTime())
 						+ " ms.");
 			}catch(FileNotFoundException e) {
-				Log.w(TAG, "Object does not exist in cache: " + e);
+				Log.w(TAG, "Jackson object does not exist in app cache: " + e);
 				return null;
 			}catch (Exception e) {
 				// Reset timestamps to show there was an error
