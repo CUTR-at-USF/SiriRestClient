@@ -136,8 +136,7 @@ public class SiriJacksonConfig {
 			 * uk.org.siri.siri.ServiceDel >>
 			 * ivery["VehicleMonitoringDelivery"])"
 			 * 
-			 * NOTE - This requires Jackson 2.1, which is still pre-release as
-			 * of 9/12/2012
+			 * NOTE - This requires Jackson v2.1.
 			 */
 			module.setDefaultUseWrapper(false);
 
@@ -153,8 +152,7 @@ public class SiriJacksonConfig {
 			 * JAXB uses pseudo-property name of "value" for XML Text segments,
 			 * whereas Jackson by default uses "" (to avoid name collisions).
 			 * 
-			 * NOTE - This requires Jackson 2.1, which is still pre-release as
-			 * of 9/12/2012.
+			 * NOTE - This requires vJackson 2.1.
 			 * 
 			 * NOTE - This still requires a CustomPascalCaseStrategy to work.
 			 * Please see the CustomPascalCaseStrategy in this app that is used

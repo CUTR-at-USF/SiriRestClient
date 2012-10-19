@@ -53,19 +53,19 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>2.1.0</version>
         </dependency>
      
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>2.1.0</version>
         </dependency>
         
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>2.1.0</version>
         </dependency>	
         <!-- Use Jackson for XML parsing  -->
         <!-- So many problems with XML and Android...
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>edu.usf.cutr.android.xml</groupId>
             <artifactId>jackson-dataformat-xml-android</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>edu.usf.cutr.android.xml</groupId>
@@ -97,19 +97,7 @@
         </dependency>        
 	</dependencies>    
     
-    <repositories>
-      <!-- For Jackson SNAPSHOTs -->
-      <repository>
-        <id>sonatype-nexus-snapshots</id>
-        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-      </repository>
-      
-      <!-- CUTR Android XML libraries SNAPSHOTs -->
-      <repository>
-        <id>cutr-snapshots</id>
-        <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/snapshots</url>
-      </repository>
-    
+    <repositories>     
       <!-- CUTR Android XML libraries Releases -->
       <repository>
         <id>cutr-releases</id>
