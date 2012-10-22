@@ -1,19 +1,12 @@
 package edu.usf.cutr.siri.android.client;
 
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import android.content.Context;
+import uk.org.siri.siri.Siri;
 import android.os.Build;
 import android.util.Log;
-import uk.org.siri.siri.Siri;
 import edu.usf.cutr.siri.android.client.config.SiriJacksonConfig;
 import edu.usf.cutr.siri.android.client.config.SiriRestClientConfig;
 
@@ -515,7 +508,14 @@ public class SiriRestClient {
 						requestEndTime= System.nanoTime();
 					}
 				}
-
+				
+				//Write the object that was just used for JSON parsing to the cache, to reduce cold-start times in future runs
+				if(config.getJacksonObjectType() == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER){
+					SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getObjectReaderInstance());
+				}else{
+					SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getObjectMapperInstance());
+				}
+				
 				break;
 				
 			case SiriRestClientConfig.RESPONSE_TYPE_XML:
@@ -551,6 +551,8 @@ public class SiriRestClient {
 							urlConnection.getInputStream(), Siri.class);
 					requestEndTime= System.nanoTime();
 				}
+				
+				SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getXmlMapperInstance());
 
 				break;
 			}

@@ -11,7 +11,6 @@ import java.text.DecimalFormat;
 
 import uk.org.siri.siri.Siri;
 
-import android.R.xml;
 import android.content.Context;
 import android.util.Log;
 
@@ -61,7 +60,7 @@ public class SiriJacksonConfig {
 	private static long cacheWriteEndTime = 0;
 
 	private static boolean usingCache = false;
-	
+
 	private static String CACHE_FILE_EXTENSION = ".cache";
 
 	// Used to format decimals to 3 places
@@ -70,8 +69,8 @@ public class SiriJacksonConfig {
 	// Private empty constructor since this object shouldn't be instantiated
 	private SiriJacksonConfig() {
 	}
-		
-	//Constants for defining which object type to read/write from/to cache
+
+	// Constants for defining which object type to read/write from/to cache
 	private static final String OBJECT_READER = "ObjectReader";
 	private static final String OBJECT_MAPPER = "ObjectMapper";
 	private static final String XML_MAPPER = "XmlMapper";
@@ -86,7 +85,7 @@ public class SiriJacksonConfig {
 	 *         latency, false if it is not
 	 */
 	public static boolean isUsingCache() {
-		//Check to see if the context is null.  If it is, we can't cache data.
+		// Check to see if the context is null. If it is, we can't cache data.
 		if (usingCache && context != null) {
 			return true;
 		} else {
@@ -169,22 +168,24 @@ public class SiriJacksonConfig {
 	public synchronized static ObjectReader getObjectReaderInstance() {
 		if (reader == null) {
 			/**
-			 * We don't have a reference to an ObjectReader,
-			 * so we need to read from cache or instantiate a new one 
+			 * We don't have a reference to an ObjectReader, so we need to read
+			 * from cache or instantiate a new one
 			 */
-			if(usingCache){			
-				reader = (ObjectReader) readFromCache(OBJECT_READER);			
-				
-				if(reader != null){
+			if (usingCache) {
+				reader = (ObjectReader) readFromCache(OBJECT_READER);
+
+				if (reader != null) {
 					// Successful read from the cache
 					return reader;
 				}
 			}
-			
+
 			/**
-			 * If we reach this point then we're either not reading from the cache,
-			 * or there was nothing in the cache to retrieve.  
-			 * Instantiate the object like normal. 
+			 * If we reach this point then we're either not reading from the
+			 * cache, there was nothing in the cache to retrieve, or there was
+			 * an error reading from the cache.
+			 * 
+			 * Instantiate the object like normal.
 			 */
 			reader = initObjectMapper().reader(Siri.class);
 		}
@@ -199,23 +200,25 @@ public class SiriJacksonConfig {
 	private static ObjectMapper initObjectMapper() {
 		if (mapper == null) {
 			/**
-			 * We don't have a reference to an ObjectMapper,
-			 * so we need to read from cache or instantiate a new one 
+			 * We don't have a reference to an ObjectMapper, so we need to read
+			 * from cache or instantiate a new one
 			 */
-			if(usingCache){
-				mapper = (ObjectMapper) readFromCache(OBJECT_MAPPER);					
-				
-				if(mapper != null){
+			if (usingCache) {
+				mapper = (ObjectMapper) readFromCache(OBJECT_MAPPER);
+
+				if (mapper != null) {
 					// Successful read from the cache
 					return mapper;
 				}
 			}
-			
+
 			/**
-			 * If we reach this point then we're either not reading from the cache,
-			 * or there was nothing in the cache to retrieve.  
-			 * Instantiate the object like normal. 
-			 */			
+			 * If we reach this point then we're either not reading from the
+			 * cache, there was nothing in the cache to retrieve, or there was
+			 * an error reading from the cache.
+			 * 
+			 * Instantiate the object like normal.
+			 */
 			// Jackson configuration
 			mapper = new ObjectMapper();
 
@@ -253,25 +256,26 @@ public class SiriJacksonConfig {
 	 * @return initialized XmlMapper ready for XML parsing
 	 */
 	private static XmlMapper initXmlMapper() {
-		if (xmlMapper == null) {			
+		if (xmlMapper == null) {
 			/**
-			 * We don't have a reference to an XmlMapper,
-			 * so we need to read from cache or instantiate a new one 
+			 * We don't have a reference to an XmlMapper, so we need to read
+			 * from cache or instantiate a new one
 			 */
-			if(usingCache){
-				xmlMapper = (XmlMapper) readFromCache(XML_MAPPER);					
-				
-				if(xmlMapper != null){
+			if (usingCache) {
+				xmlMapper = (XmlMapper) readFromCache(XML_MAPPER);
+
+				if (xmlMapper != null) {
 					// Successful read from the cache
 					return xmlMapper;
 				}
 			}
-			
+
 			/**
-			 * If we reach this point then we're either not reading from the cache,
-			 * or there was nothing in the cache to retrieve.  
-			 * Instantiate the object like normal. 
-			 */		
+			 * If we reach this point then we're either not reading from the
+			 * cache, there was nothing in the cache to retrieve, or there was
+			 * an error reading from the cache. Instantiate the object like
+			 * normal.
+			 */
 
 			// Use Aalto StAX implementation explicitly
 			XmlFactory f = new XmlFactory(new InputFactoryImpl(),
@@ -340,12 +344,17 @@ public class SiriJacksonConfig {
 
 	/**
 	 * Forces the write of a ObjectMapper, ObjectReader, or XmlMapper to the app
-	 * cache.
+	 * cache. The cache is used to reduce the cold-start delay for Jackson
+	 * parsing on future runs, after this VM instance is destroyed.
 	 * 
-	 * Applications should call this after a JSON or XML call to the server to
+	 * Applications may call this after a JSON or XML call to the server to
 	 * attempt to hide the cache write latency from the user, instead of having
 	 * the cache write occur as part of the first request to use the
 	 * ObjectMapper, ObjectReader, or XmlMapper.
+	 * 
+	 * NOTE: Calling this method from the application is NOT required, since the
+	 * SiriRestClient automatically triggers a non-blocking cache write after it
+	 * finishes parsing a server response.
 	 * 
 	 * This method is non-blocking.
 	 * 
@@ -353,16 +362,23 @@ public class SiriJacksonConfig {
 	 *            of object to be written to the cache
 	 */
 	public static void forceCacheWrite(final Serializable object) {
-		new Thread() {
-			public void run() {		
-				writeToCache(object);		
-			};
-		}.start();
+		if (isUsingCache()) {
+			new Thread() {
+				public void run() {
+					writeToCache(object);
+				};
+			}.start();
+		} else {
+			Log.w(TAG,
+					"App tried to force a cache write but caching is not activated.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
+		}
 	}
 
 	/**
 	 * Forces the read of a ObjectMapper, ObjectReader, or XmlMapper from the
-	 * app cache to be stored as a static instance in this object.
+	 * app cache to be stored as a static instance in this object. The cache is
+	 * used to reduce the cold-start delay for Jackson parsing on future runs,
+	 * after this VM instance is destroyed.
 	 * 
 	 * Applications should call this on startup to attempt to hide the cache
 	 * read latency from the user, instead of having the cache read occur on the
@@ -374,13 +390,18 @@ public class SiriJacksonConfig {
 	 *            of object to be read from the cache
 	 */
 	public static void forceCacheRead() {
-		new Thread() {
-			public void run() {		
-				readFromCache(OBJECT_MAPPER);
-				readFromCache(OBJECT_READER);
-				readFromCache(XML_MAPPER);			
-			};
-		}.start();
+		if (isUsingCache()) {
+			new Thread() {
+				public void run() {
+					readFromCache(OBJECT_MAPPER);
+					readFromCache(OBJECT_READER);
+					readFromCache(XML_MAPPER);
+				};
+			}.start();
+		} else {
+			Log.w(TAG,
+					"App tried to force a cache write but caching is not activated.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
+		}
 	}
 
 	/**
@@ -401,27 +422,31 @@ public class SiriJacksonConfig {
 
 		if (context != null) {
 			try {
-				if(object instanceof XmlMapper){
+				if (object instanceof XmlMapper) {
 					fileName = XML_MAPPER + CACHE_FILE_EXTENSION;
 				}
-				if(object instanceof ObjectMapper){
+				if (object instanceof ObjectMapper) {
 					fileName = OBJECT_MAPPER + CACHE_FILE_EXTENSION;
 				}
-				if(object instanceof ObjectReader){
+				if (object instanceof ObjectReader) {
 					fileName = OBJECT_READER + CACHE_FILE_EXTENSION;
 				}
-				
-				cacheWriteStartTime = System.nanoTime();				
-				fileStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+
+				cacheWriteStartTime = System.nanoTime();
+				fileStream = context.openFileOutput(fileName,
+						Context.MODE_PRIVATE);
 				objectStream = new ObjectOutputStream(fileStream);
 				objectStream.writeObject(object);
 				objectStream.flush();
 				fileStream.getFD().sync();
 				cacheWriteEndTime = System.nanoTime();
-				
 				success = true;
-				Log.d("TAG", "Wrote " + fileName
-						+ " to cache in " + df.format(getLastCacheWriteTime())
+
+				// Get size of serialized object
+				long fileSize = context.getFileStreamPath(fileName).length();
+
+				Log.d("TAG", "Wrote " + fileName + " to cache (" + fileSize
+						+ " bytes) in " + df.format(getLastCacheWriteTime())
 						+ " ms.");
 			} catch (IOException e) {
 				// Reset timestamps to show there was an error
@@ -429,20 +454,20 @@ public class SiriJacksonConfig {
 				cacheWriteEndTime = 0;
 				Log.e(TAG, "Couldn't write object to cache: " + e);
 			} finally {
-				try{
-					if(objectStream != null){
+				try {
+					if (objectStream != null) {
 						objectStream.close();
 					}
-					if(fileStream != null){
+					if (fileStream != null) {
 						fileStream.close();
-					}	
-				}catch(Exception e){
+					}
+				} catch (Exception e) {
 					Log.e(TAG, "Error closing file connections: " + e);
 				}
 			}
 		} else {
 			Log.w(TAG,
-					"Can't write to cache - no context provided.  If you want to use the cache, call SiriJacksonConfig.setContext(context) with a reference to your context.");
+					"Can't write to cache - no context provided.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
 		}
 
 		return success;
@@ -452,22 +477,21 @@ public class SiriJacksonConfig {
 	 * Read the given object from Android internal storage for this app
 	 * 
 	 * @param objectType
-	 *            object type, defined by class constant Strings, to retrieve from cache (ObjectReader,
-	 *            ObjectMapper, or XmlReader)
-	 *             
+	 *            object type, defined by class constant Strings, to retrieve
+	 *            from cache (ObjectReader, ObjectMapper, or XmlReader)
+	 * 
 	 * @return deserialized Object, or null if object couldn't be deserialized
 	 */
 	private static synchronized Serializable readFromCache(String objectType) {
 
 		FileInputStream fileStream = null;
 		ObjectInputStream objectStream = null;
-		
-		//Holds object to be read from cache
+
+		// Holds object to be read from cache
 		Serializable object = null;
 
 		// Before reading from cache, check to make sure that we don't already
-		// have
-		// the requested object in memory
+		// have the requested object in memory
 		if (objectType.equalsIgnoreCase(XML_MAPPER) && xmlMapper != null) {
 			return xmlMapper;
 		}
@@ -481,33 +505,36 @@ public class SiriJacksonConfig {
 		if (context != null) {
 			try {
 				String fileName = objectType + CACHE_FILE_EXTENSION;
-				
-				cacheReadStartTime = System.nanoTime();				
-				fileStream = context.openFileInput(fileName);				
-				objectStream = new ObjectInputStream(fileStream);				
-				object = (Serializable) objectStream.readObject();				
+
+				cacheReadStartTime = System.nanoTime();
+				fileStream = context.openFileInput(fileName);
+				objectStream = new ObjectInputStream(fileStream);
+				object = (Serializable) objectStream.readObject();
 				cacheReadEndTime = System.nanoTime();
-				
-				Log.d("TAG", "Read " + fileName
-						+ " from cache in " + df.format(getLastCacheReadTime())
+
+				// Get size of serialized object
+				long fileSize = context.getFileStreamPath(fileName).length();
+
+				Log.d("TAG", "Read " + fileName + " from cache (" + fileSize
+						+ " bytes) in " + df.format(getLastCacheReadTime())
 						+ " ms.");
-			}catch(FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				Log.w(TAG, "Jackson object does not exist in app cache: " + e);
 				return null;
-			}catch (Exception e) {
+			} catch (Exception e) {
 				// Reset timestamps to show there was an error
 				cacheReadStartTime = 0;
 				cacheReadEndTime = 0;
-				Log.e(TAG, "Couldn't read object from cache: " + e);				
+				Log.e(TAG, "Couldn't read object from cache: " + e);
 			} finally {
-				try{
-					if(objectStream != null){
+				try {
+					if (objectStream != null) {
 						objectStream.close();
 					}
-					if(fileStream != null){
+					if (fileStream != null) {
 						fileStream.close();
-					}					
-				}catch(Exception e){
+					}
+				} catch (Exception e) {
 					Log.e(TAG, "Error closing file connections: " + e);
 				}
 			}
@@ -526,7 +553,7 @@ public class SiriJacksonConfig {
 			return object;
 		} else {
 			Log.w(TAG,
-					"Couldn't read from cache - no context provided.  If you want to use the cache, call SiriJacksonConfig.setContext(context) with a reference to your context.");
+					"Couldn't read from cache - no context provided.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
 			return null;
 		}
 	}
