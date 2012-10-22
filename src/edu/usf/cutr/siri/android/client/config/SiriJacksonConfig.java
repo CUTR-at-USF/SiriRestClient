@@ -61,6 +61,11 @@ public class SiriJacksonConfig {
 
 	private static boolean usingCache = false;
 
+	// Constants for defining which object type to read/write from/to cache
+	private static final String OBJECT_READER = "ObjectReader";
+	private static final String OBJECT_MAPPER = "ObjectMapper";
+	private static final String XML_MAPPER = "XmlMapper";
+
 	private static String CACHE_FILE_EXTENSION = ".cache";
 
 	// Used to format decimals to 3 places
@@ -69,11 +74,6 @@ public class SiriJacksonConfig {
 	// Private empty constructor since this object shouldn't be instantiated
 	private SiriJacksonConfig() {
 	}
-
-	// Constants for defining which object type to read/write from/to cache
-	private static final String OBJECT_READER = "ObjectReader";
-	private static final String OBJECT_MAPPER = "ObjectMapper";
-	private static final String XML_MAPPER = "XmlMapper";
 
 	/**
 	 * Returns true if the application is using a cache to read/write serialized
