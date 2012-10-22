@@ -451,7 +451,7 @@ public class SiriJacksonConfig {
 				// Reset timestamps to show there was an error
 				cacheWriteStartTime = 0;
 				cacheWriteEndTime = 0;
-				Log.e(TAG, "Couldn't write object to cache: " + e);
+				Log.e(TAG, "Couldn't write Jackson object '" + fileName + "' to cache: " + e);
 			} finally {
 				try {
 					if (objectStream != null) {
@@ -518,13 +518,13 @@ public class SiriJacksonConfig {
 						+ " bytes) in " + df.format(getLastCacheReadTime())
 						+ " ms.");
 			} catch (FileNotFoundException e) {
-				Log.w(TAG, "Jackson object does not exist in app cache: " + e);
+				Log.w(TAG, "Cache miss - Jackson object '" + objectType + "' does not exist in app cache: " + e);
 				return null;
 			} catch (Exception e) {
 				// Reset timestamps to show there was an error
 				cacheReadStartTime = 0;
 				cacheReadEndTime = 0;
-				Log.e(TAG, "Couldn't read object from cache: " + e);
+				Log.e(TAG, "Couldn't read Jackson object '" + objectType + "' from cache: " + e);
 			} finally {
 				try {
 					if (objectStream != null) {
@@ -534,7 +534,7 @@ public class SiriJacksonConfig {
 						fileStream.close();
 					}
 				} catch (Exception e) {
-					Log.e(TAG, "Error closing file connections: " + e);
+					Log.e(TAG, "Error closing cache file connections: " + e);
 				}
 			}
 
