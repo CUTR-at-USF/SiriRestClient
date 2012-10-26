@@ -231,6 +231,7 @@ public class SiriJacksonConfig {
 					DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
 			mapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING,
 					true);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 			// Tell Jackson to expect the JSON in PascalCase, instead of
 			// camelCase
