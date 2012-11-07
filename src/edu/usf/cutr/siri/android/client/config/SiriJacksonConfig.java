@@ -424,11 +424,11 @@ public class SiriJacksonConfig {
 			try {
 				if (object instanceof XmlMapper) {
 					fileName = XML_MAPPER + CACHE_FILE_EXTENSION;
-				}
-				if (object instanceof ObjectMapper) {
+				}else if (object instanceof ObjectMapper) {
+					//ObjectMapper check must come after XmlMapper check,
+					//since XmlMapper is subclass of ObjectMapper
 					fileName = OBJECT_MAPPER + CACHE_FILE_EXTENSION;
-				}
-				if (object instanceof ObjectReader) {
+				}else if (object instanceof ObjectReader) {
 					fileName = OBJECT_READER + CACHE_FILE_EXTENSION;
 				}
 
