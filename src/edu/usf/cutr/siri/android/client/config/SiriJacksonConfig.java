@@ -542,11 +542,9 @@ public class SiriJacksonConfig {
 			// Keep reference to object we just read from cache
 			if (object instanceof XmlMapper) {
 				xmlMapper = (XmlMapper) object;
-			}
-			if (object instanceof ObjectMapper) {
+			}else if (object instanceof ObjectMapper) {
 				mapper = (ObjectMapper) object;
-			}
-			if (object instanceof ObjectReader) {
+			}else if (object instanceof ObjectReader) {
 				reader = (ObjectReader) object;
 			}
 
