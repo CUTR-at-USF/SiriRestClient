@@ -53,13 +53,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.1-SNAPSHOT</version>
         </dependency>
      
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.1-SNAPSHOT</version>
         </dependency>
         
         <dependency>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>edu.usf.cutr.android.xml</groupId>
             <artifactId>jackson-dataformat-xml-android</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>edu.usf.cutr.android.xml</groupId>
@@ -103,6 +103,16 @@
         <id>cutr-releases</id>
         <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/releases</url>
       </repository>      
+      <!-- CUTR Android XML libraries SNAPSHOTs -->
+      <repository>
+        <id>cutr-snapshots</id>
+        <url>https://github.com/CUTR-at-USF/cutr-mvn-repo/raw/master/snapshots</url>
+      </repository>  
+      <!-- For Jackson SNAPSHOTs -->
+      <repository>
+        <id>fasterxml-snapshots</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      </repository>
     </repositories>
     
     <!-- Maven build -->
