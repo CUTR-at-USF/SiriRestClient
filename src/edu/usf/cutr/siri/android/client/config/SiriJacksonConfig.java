@@ -446,7 +446,7 @@ public class SiriJacksonConfig {
 				long fileSize = context.getFileStreamPath(fileName).length();
 
 				Log.d("TAG", "Wrote " + fileName + " to cache (" + fileSize
-						+ " bytes) in " + df.format(getLastCacheWriteTime())
+						+ " bytes) in " + df.format(getLastCacheWriteTime() / 1000000.0)
 						+ " ms.");
 			} catch (IOException e) {
 				// Reset timestamps to show there was an error
@@ -516,7 +516,7 @@ public class SiriJacksonConfig {
 				long fileSize = context.getFileStreamPath(fileName).length();
 
 				Log.d("TAG", "Read " + fileName + " from cache (" + fileSize
-						+ " bytes) in " + df.format(getLastCacheReadTime())
+						+ " bytes) in " + df.format(getLastCacheReadTime()/ 1000000.0)
 						+ " ms.");
 			} catch (FileNotFoundException e) {
 				Log.w(TAG, "Cache miss - Jackson object '" + objectType + "' does not exist in app cache: " + e);
