@@ -53,13 +53,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.1.1-SNAPSHOT</version>
+            <version>2.1.1</version>
         </dependency>
      
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.1.1-SNAPSHOT</version>
+            <version>2.1.1</version>
         </dependency>
         
         <dependency>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>edu.usf.cutr.android.xml</groupId>
             <artifactId>jackson-dataformat-xml-android</artifactId>
-            <version>2.1.1-SNAPSHOT</version>
+            <version>2.1.1</version>
         </dependency>
         <dependency>
             <groupId>edu.usf.cutr.android.xml</groupId>
