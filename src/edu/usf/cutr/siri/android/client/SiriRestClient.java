@@ -510,10 +510,13 @@ public class SiriRestClient {
 				}
 				
 				//Write the object that was just used for JSON parsing to the cache, to reduce cold-start times in future runs
-				if(config.getJacksonObjectType() == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER){
-					SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getObjectReaderInstance());
-				}else{
-					SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getObjectMapperInstance());
+				
+				if(SiriJacksonConfig.isUsingCache()){
+					if(config.getJacksonObjectType() == SiriRestClientConfig.JACKSON_OBJECT_TYPE_READER){
+						SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getObjectReaderInstance());
+					}else{
+						SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getObjectMapperInstance());
+					}
 				}
 				
 				break;
@@ -552,7 +555,9 @@ public class SiriRestClient {
 					requestEndTime= System.nanoTime();
 				}
 				
-				SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getXmlMapperInstance());
+				if(SiriJacksonConfig.isUsingCache()){
+					SiriJacksonConfig.forceCacheWrite(SiriJacksonConfig.getXmlMapperInstance());
+				}
 
 				break;
 			}
