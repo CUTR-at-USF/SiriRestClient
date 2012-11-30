@@ -67,6 +67,14 @@ public class SiriJacksonConfig {
 	private static final String XML_MAPPER = "XmlMapper";
 	private static final String CACHE_FILE_EXTENSION = ".cache";
 
+	// ThreadGroup is generally frowned upon to use in Java, but we need to
+	// create one here so we can set the stacksize of the cache reading/writing
+	// threads
+	private static ThreadGroup cacheThreadGroup = new ThreadGroup("cacheThreadGroup");
+	
+	//64K stack size, to avoid stackoverflow exceptions when serializing/deserializing
+	private static final long THREAD_STACK_SIZE = 65536;  
+
 	// Used to format decimals to 3 places
 	static DecimalFormat df = new DecimalFormat("#,###.###");
 
@@ -231,7 +239,8 @@ public class SiriJacksonConfig {
 					DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
 			mapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING,
 					true);
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+					false);
 
 			// Tell Jackson to expect the JSON in PascalCase, instead of
 			// camelCase
@@ -363,11 +372,13 @@ public class SiriJacksonConfig {
 	 */
 	public static void forceCacheWrite(final Serializable object) {
 		if (isUsingCache()) {
-			new Thread() {
+			Runnable runnable = new Runnable(){
 				public void run() {
 					writeToCache(object);
 				};
-			}.start();
+			};
+			new Thread(cacheThreadGroup, runnable, "forceCacheWrite", THREAD_STACK_SIZE).start();
+			Log.d(TAG, "Started thread with stack size " + THREAD_STACK_SIZE + " to force a cache write.");
 		} else {
 			Log.w(TAG,
 					"App tried to force a cache write but caching is not activated.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
@@ -390,14 +401,16 @@ public class SiriJacksonConfig {
 	 *            of object to be read from the cache
 	 */
 	public static void forceCacheRead() {
-		if (isUsingCache()) {
-			new Thread() {
+		if (isUsingCache()) {				
+			Runnable runnable = new Runnable(){
 				public void run() {
 					readFromCache(OBJECT_MAPPER);
 					readFromCache(OBJECT_READER);
 					readFromCache(XML_MAPPER);
 				};
-			}.start();
+			};
+			new Thread(cacheThreadGroup, runnable, "forceCacheRead", THREAD_STACK_SIZE).start();
+			Log.d(TAG, "Started thread with stack size " + THREAD_STACK_SIZE + " to force a cache read.");
 		} else {
 			Log.w(TAG,
 					"App tried to force a cache write but caching is not activated.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
@@ -424,11 +437,11 @@ public class SiriJacksonConfig {
 			try {
 				if (object instanceof XmlMapper) {
 					fileName = XML_MAPPER + CACHE_FILE_EXTENSION;
-				}else if (object instanceof ObjectMapper) {
-					//ObjectMapper check must come after XmlMapper check,
-					//since XmlMapper is subclass of ObjectMapper
+				} else if (object instanceof ObjectMapper) {
+					// ObjectMapper check must come after XmlMapper check,
+					// since XmlMapper is subclass of ObjectMapper
 					fileName = OBJECT_MAPPER + CACHE_FILE_EXTENSION;
-				}else if (object instanceof ObjectReader) {
+				} else if (object instanceof ObjectReader) {
 					fileName = OBJECT_READER + CACHE_FILE_EXTENSION;
 				}
 
@@ -445,14 +458,20 @@ public class SiriJacksonConfig {
 				// Get size of serialized object
 				long fileSize = context.getFileStreamPath(fileName).length();
 
-				Log.d("TAG", "Wrote " + fileName + " to cache (" + fileSize
-						+ " bytes) in " + df.format(getLastCacheWriteTime() / 1000000.0)
-						+ " ms.");
+				Log.d(TAG,
+						"Wrote "
+								+ fileName
+								+ " to cache ("
+								+ fileSize
+								+ " bytes) in "
+								+ df.format(getLastCacheWriteTime() / 1000000.0)
+								+ " ms.");
 			} catch (IOException e) {
 				// Reset timestamps to show there was an error
 				cacheWriteStartTime = 0;
 				cacheWriteEndTime = 0;
-				Log.e(TAG, "Couldn't write Jackson object '" + fileName + "' to cache: " + e);
+				Log.e(TAG, "Couldn't write Jackson object '" + fileName
+						+ "' to cache: " + e);
 			} finally {
 				try {
 					if (objectStream != null) {
@@ -515,17 +534,21 @@ public class SiriJacksonConfig {
 				// Get size of serialized object
 				long fileSize = context.getFileStreamPath(fileName).length();
 
-				Log.d("TAG", "Read " + fileName + " from cache (" + fileSize
-						+ " bytes) in " + df.format(getLastCacheReadTime()/ 1000000.0)
-						+ " ms.");
+				Log.d(TAG,
+						"Read " + fileName + " from cache (" + fileSize
+								+ " bytes) in "
+								+ df.format(getLastCacheReadTime() / 1000000.0)
+								+ " ms.");
 			} catch (FileNotFoundException e) {
-				Log.w(TAG, "Cache miss - Jackson object '" + objectType + "' does not exist in app cache: " + e);
+				Log.w(TAG, "Cache miss - Jackson object '" + objectType
+						+ "' does not exist in app cache: " + e);
 				return null;
 			} catch (Exception e) {
 				// Reset timestamps to show there was an error
 				cacheReadStartTime = 0;
 				cacheReadEndTime = 0;
-				Log.e(TAG, "Couldn't read Jackson object '" + objectType + "' from cache: " + e);
+				Log.e(TAG, "Couldn't read Jackson object '" + objectType
+						+ "' from cache: " + e);
 			} finally {
 				try {
 					if (objectStream != null) {
@@ -542,9 +565,9 @@ public class SiriJacksonConfig {
 			// Keep reference to object we just read from cache
 			if (object instanceof XmlMapper) {
 				xmlMapper = (XmlMapper) object;
-			}else if (object instanceof ObjectMapper) {
+			} else if (object instanceof ObjectMapper) {
 				mapper = (ObjectMapper) object;
-			}else if (object instanceof ObjectReader) {
+			} else if (object instanceof ObjectReader) {
 				reader = (ObjectReader) object;
 			}
 
