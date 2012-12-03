@@ -70,10 +70,16 @@ public class SiriJacksonConfig {
 	// ThreadGroup is generally frowned upon to use in Java, but we need to
 	// create one here so we can set the stacksize of the cache reading/writing
 	// threads
-	private static ThreadGroup cacheThreadGroup = new ThreadGroup("cacheThreadGroup");
-	
-	//64K stack size, to avoid stackoverflow exceptions when serializing/deserializing
-	private static final long THREAD_STACK_SIZE = 65536;  
+	private static ThreadGroup cacheThreadGroup = new ThreadGroup(
+			"cacheThreadGroup");
+
+	// 64K stack size for JSON, to avoid stackoverflow exceptions when
+	// serializing/deserializing
+	private static long threadStackSizeJson = 65536;
+
+	// 128K stack size for XML, to avoid stackoverflow exceptions when
+	// serializing/deserializing
+	private static long threadStackSizeXml = 131072;
 
 	// Used to format decimals to 3 places
 	static DecimalFormat df = new DecimalFormat("#,###.###");
@@ -144,6 +150,54 @@ public class SiriJacksonConfig {
 	 */
 	public static long getLastCacheWriteTime() {
 		return cacheWriteEndTime - cacheWriteStartTime;
+	}
+	
+	/**
+	 * Gets the thread stack size used to write JSON-related Jackson objects
+	 * to the cache.  Note that JSON cache reads are defined by the threadStackSizeXml
+	 * variable, because JSON and XML cache reads happen on the same thread and deserializing
+	 * the XmlMapper requires a larger stack size than the ObjectMapper or ObjectReader used for JSON.
+	 * @return the thread stack size used to write JSON-related Jackson objects
+	 * to the cache
+	 */
+	public static long getThreadStackSizeJson() {
+		return threadStackSizeJson;
+	}
+	
+	/**
+	 * Sets the thread stack size used to write JSON-related Jackson objects
+	 * to the cache.  Note that JSON cache reads are defined by the threadStackSizeXml
+	 * variable, because JSON and XML cache reads happen on the same thread and deserializing
+	 * the XmlMapper requires a larger stack size than the ObjectMapper or ObjectReader used for JSON.
+	 * @param threadStackSizeJson the thread stack size used to write JSON-related Jackson objects
+	 * to the cache
+	 */
+	public static void setThreadStackSizeJson(long threadStackSizeJson) {
+		SiriJacksonConfig.threadStackSizeJson = threadStackSizeJson;
+	}
+	/**
+	 * Returns the thread stack size used to read and write XML-related Jackson objects,
+	 * and read JSON-related objects, to/from the cache.  This value is used for 
+	 * reading JSON objects as well because JSON and XML cache reads happen on the same thread.
+	 * @return the thread stack size used to read and write XML-related Jackson objects,
+	 * and read JSON-related objects, to/from the cache.  This value is used for 
+	 * reading JSON objects as well because JSON and XML cache reads happen on the same thread.
+	 */
+	public static long getThreadStackSizeXml() {
+		return threadStackSizeXml;
+	}	
+	
+	/**
+	 * Returns the thread stack size used to read and write XML-related Jackson objects,
+	 * and read JSON-related objects, to/from the cache.  This value is used for 
+	 * reading JSON objects as well because JSON and XML cache reads happen on the same thread.
+	 * 
+	 * @param threadStackSizeXml the thread stack size used to read and write XML-related Jackson objects,
+	 * and read JSON-related objects, from/to the cache.  This value is used for 
+	 * reading JSON objects as well because JSON and XML cache reads happen on the same thread.
+	 */
+	public static void setThreadStackSizeXml(long threadStackSizeXml) {
+		SiriJacksonConfig.threadStackSizeXml = threadStackSizeXml;
 	}
 
 	/**
@@ -371,14 +425,29 @@ public class SiriJacksonConfig {
 	 *            of object to be written to the cache
 	 */
 	public static void forceCacheWrite(final Serializable object) {
+
+		long stackSize = threadStackSizeJson; // Use default value of JSON
+												// parsing stack size
+
+		if (object instanceof XmlMapper) {
+			stackSize = threadStackSizeXml;
+		} else if (object instanceof ObjectMapper
+				|| object instanceof ObjectReader) {
+			// ObjectMapper check must come after XmlMapper check,
+			// since XmlMapper is subclass of ObjectMapper
+			stackSize = threadStackSizeJson;
+		}
+
 		if (isUsingCache()) {
-			Runnable runnable = new Runnable(){
+			Runnable runnable = new Runnable() {
 				public void run() {
 					writeToCache(object);
 				};
 			};
-			new Thread(cacheThreadGroup, runnable, "forceCacheWrite", THREAD_STACK_SIZE).start();
-			Log.d(TAG, "Started thread with stack size " + THREAD_STACK_SIZE + " to force a cache write.");
+			new Thread(cacheThreadGroup, runnable, "forceCacheWrite", stackSize)
+					.start();
+			Log.d(TAG, "Started thread with stack size " + stackSize
+					+ " to force a cache write.");
 		} else {
 			Log.w(TAG,
 					"App tried to force a cache write but caching is not activated.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
@@ -401,16 +470,27 @@ public class SiriJacksonConfig {
 	 *            of object to be read from the cache
 	 */
 	public static void forceCacheRead() {
-		if (isUsingCache()) {				
-			Runnable runnable = new Runnable(){
+
+		// Use XML parsing stack size (required for XML read), since JSON and
+		// XML are read on the same thread to decrease overall
+		// memory requirements - readFromCache() is synchronized, so executing
+		// cache read to three threads
+		// (one per Jackson object) wouldn't parallelize the operation anyway.
+		long stackSize = threadStackSizeXml;
+
+		if (isUsingCache()) {
+			Runnable runnable = new Runnable() {
 				public void run() {
 					readFromCache(OBJECT_MAPPER);
 					readFromCache(OBJECT_READER);
 					readFromCache(XML_MAPPER);
 				};
 			};
-			new Thread(cacheThreadGroup, runnable, "forceCacheRead", THREAD_STACK_SIZE).start();
-			Log.d(TAG, "Started thread with stack size " + THREAD_STACK_SIZE + " to force a cache read.");
+			new Thread(cacheThreadGroup, runnable, "forceCacheRead", stackSize)
+					.start();
+			Log.d(TAG, "Started thread with stack size " + stackSize
+					+ " to force a cache read.");
+
 		} else {
 			Log.w(TAG,
 					"App tried to force a cache write but caching is not activated.  If you want to use the cache, call SiriJacksonConfig.setUsingCache(true, context) with a reference to your context.");
