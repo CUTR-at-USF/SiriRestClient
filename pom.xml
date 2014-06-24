@@ -94,7 +94,12 @@
             <groupId>edu.usf.cutr.android.xml</groupId>
             <artifactId>aalto-xml-android</artifactId>
             <version>0.9.9</version>
-        </dependency>        
+        </dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-jaxb-annotations</artifactId>
+			<version>2.4.1</version>
+		</dependency>       
 	</dependencies>    
     
     <repositories>     
